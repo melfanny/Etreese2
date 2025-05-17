@@ -11,6 +11,9 @@
                 <div class="p-6 text-gray-900">
                     {{ __("You're logged in!") }}
                 </div>
+                <div class="p-6 text-gray-900">
+                    {{ __("SELAMAT DATANG DI ETREESE!") }}
+                </div>
             </div>
         </div>
     </div>
