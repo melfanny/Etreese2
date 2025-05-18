@@ -23,25 +23,6 @@
             overflow-x: hidden;
         }
 
-        .container {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .top-bar {
-            width: 100%;
-            height: 144px;
-            background: #FFFBEF;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .logo {
-            height: 100%;
-        }
-
         .content-wrapper {
             display: flex;
             justify-content: center;
@@ -224,7 +205,7 @@
 </head>
 
 <body>
-    @include ('components.header')
+    @include ('layouts.navigation')
     <!-- Content -->
     <div class="content-wrapper">
         <div class="form-container">
@@ -278,6 +259,7 @@
         </div>
     </div>
     </div>
+    @include('layouts.footer')
 </body>
 
 </html>
