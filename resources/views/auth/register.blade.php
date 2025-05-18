@@ -179,7 +179,7 @@
 </head>
 
 <body>
-    @include ('layout.navigation')
+    @include ('layouts.navigation')
 
     <!-- Content -->
     <div class="content-wrapper">
@@ -234,7 +234,7 @@
         </div>
     </div>
     </div>
-    @include('components.footer')
+    @include('layouts.footer')
 </body>
 
 </html>
