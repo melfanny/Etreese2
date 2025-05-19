@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\AdminController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\ProductController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,5 +34,22 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+// routes admin
+//Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
+Route::prefix('admin')->group(function () {
+    Route::get('profile', [AdminController::class, 'profile'])->name('admin.profile');
+    Route::get('home', [AdminController::class, 'index'])->name('admin.home');
+    Route::get('orders', [AdminController::class, 'orders'])->name('admin.orders');
+    Route::get('products', [AdminController::class, 'products_admin'])->name('admin.products_admin');
+    Route::get('sales', [AdminController::class, 'sales'])->name('admin.sales');
+    Route::get('stock', [AdminController::class, 'stock'])->name('admin.stock');
+    #Route::get('/products/create', [ProductController::class, 'create'])->name('admin.products.create');
+});
+
+
+
+
+
 
 require __DIR__ . '/auth.php';
