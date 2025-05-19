@@ -46,11 +46,12 @@ Route::prefix('admin')->group(function () {
     Route::get('profile', [AdminController::class, 'profile'])->name('admin.profile');
     Route::get('home', [AdminController::class, 'index'])->name('admin.home');
     Route::get('orders', [AdminController::class, 'orders'])->name('admin.orders');
-    Route::get('products', [AdminController::class, 'products_admin'])->name('admin.products_admin');
     Route::get('sales', [AdminController::class, 'sales'])->name('admin.sales');
     Route::get('stock', [AdminController::class, 'stock'])->name('admin.stock');
-    #Route::get('/products/create', [ProductController::class, 'create'])->name('admin.products.create');
+    Route::get('products', [AdminController::class, 'products_admin'])->name('admin.products.products_admin');
+    Route::get('add_new', [ProductController::class, 'create'])->name('admin.products.create');
 });
+#Route::get('/products/create', [ProductController::class, 'create'])->name('admin.products.create');
 
 
 

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use Illuminate\Support\Facades\Storage;
@@ -18,7 +19,7 @@ class ProductController extends Controller
     // Menampilkan form tambah produk
     public function create()
     {
-        return view('admin.products.create');
+        return view('admin.products.add_new');
     }
 
     // Menyimpan produk baru
@@ -71,7 +72,7 @@ class ProductController extends Controller
 
         $product->save();
 
-        return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');
+        return redirect()->route('admin.products.products.index')->with('success', 'Product updated successfully.');
     }
 
     // Menghapus produk

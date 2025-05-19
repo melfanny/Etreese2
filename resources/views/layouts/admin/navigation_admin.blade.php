@@ -74,21 +74,20 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <div class="top-bar">
-    <div class="nav-left">
-        <a href="{{ route('admin.orders') }}"
-            class="nav-link {{ request()->routeIs('orders') ? 'active' : '' }}">ORDERS</a>
-        <a href="{{ route('admin.products_admin') }}"
-            class="nav-link {{ request()->routeIs('products_admin') ? 'active' : '' }}">PRODUCTS</a>
-    </div>
+    <a href="{{ route('admin.orders') }}"
+        class="nav-link {{ request()->routeIs('admin.orders') ? 'active' : '' }}">ORDERS</a>
+
+    <a href="{{ route('admin.products.products_admin') }}"
+        class="nav-link {{ request()->routeIs('admin.products.products_admin') ? 'active' : '' }}">PRODUCTS</a>
 
     <div class="nav-center">
         <img src="{{ asset('images/logo.png') }}" alt="Etreese Logo">
     </div>
     <div class="nav-right">
         <a href="{{ route('admin.sales') }}"
-            class="nav-link {{ request()->routeIs('sales') ? 'active' : '' }}">SALES</a>
+            class="nav-link {{ request()->routeIs('admin.sales') ? 'active' : '' }}">SALES</a>
         <a href="{{ route('admin.stock') }}"
-            class="nav-link {{ request()->routeIs('stock') ? 'active' : '' }}">STOCK</a>
+            class="nav-link {{ request()->routeIs('admin.stock') ? 'active' : '' }}">STOCK</a>
 
         @auth
             <div class="icon-wrapper">

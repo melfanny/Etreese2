@@ -22,8 +22,9 @@ class AdminController extends Controller
     // Halaman Products
     public function products_admin()
     {
-        return view('admin.products_admin');
+        return view('admin.products.products_admin');
     }
+
 
     // Halaman Sales
     public function sales()
