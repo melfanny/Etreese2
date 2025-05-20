@@ -1,6 +1,6 @@
 <style>
-    .home-banner {
-        background-color: #EBC4AE;
+    .home-banner { #EBC4AE
+        background-color:;
         padding: 60px 10%;
         font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
         color: #843902;

@@ -1,0 +1,86 @@
+<style>
+.products-section {
+    background-color: #EBC4AE;
+    padding: 40px;
+}
+
+.catalog {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.product-card {
+    background-color: #8B4513;
+    border-radius: 15px;
+    width: 300px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.product-card img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 10px;
+}
+
+.product-footer {
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.product-name {
+    padding-left: 10px;
+    font-weight: bold;
+    font-size: 14px;
+    color: #ffffff;
+}
+
+.cart-button {
+    background-color: #8B4513; /* Dark brown */
+    border: none;
+    padding: 8px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.cart-button img {
+    width: 30px;
+    height: 30px;
+}
+</style>
+
+<section class="products-section">
+    <div class="catalog">
+        <div class="product-card">
+            <img src="{{ asset('images/kemejahitam.jpg') }}" alt="Ethereal Bloom">
+            <div class="product-footer">
+                <span class="product-name">Ethereal Bloom</span>
+                <button class="cart-button">
+                    <img src="{{ asset('images/whitecartlogo.png') }}" alt="Cart" />
+                </button>
+            </div>
+        </div>
+        <div class="product-card">
+            <img src="{{ asset('images/kemejahitam.jpg') }}" alt="Blooming Serenity">
+            <div class="product-footer">
+                <span class="product-name">Blooming Serenity</span>
+                <button class="cart-button">
+                    <img src="{{ asset('images/whitecartlogo.png') }}" alt="Cart" />
+                </button>
+            </div>
+        </div>
+        <div class="product-card">
+            <img src="{{ asset('images/kemejahitam.jpg') }}" alt="Ethereal Bloom">
+            <div class="product-footer">
+                <span class="product-name">Ethereal Bloom</span>
+                <button class="cart-button">
+                    <img src="{{ asset('images/whitecartlogo.png') }}" alt="Cart" />
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
