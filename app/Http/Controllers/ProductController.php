@@ -14,24 +14,24 @@ class ProductController extends Controller
 {
     public function create()
     {
-        return view('admin.products.add_new'); 
+        return view('admin.products.add_new');
     }
 
     public function store(Request $request)
     {
         $request->validate([
-        'name' => 'required|string',
-        'deskripsi' => 'nullable|string',
-        'image' => 'nullable|image',
-        'price' => 'required|numeric|min:0',
-        'colors' => 'required|array',      // <=== ini
-        'colors.*' => 'required|string',   // <=== dan ini
-        'sizes' => 'required|array',
-        'sizes.*' => 'required|string',
-        'stocks' => 'required|array',
-        'stocks.*' => 'array',
-        'stocks.*.*' => 'required|integer|min:0',
-]);
+            'name' => 'required|string',
+            'deskripsi' => 'nullable|string',
+            'image' => 'nullable|image',
+            'price' => 'required|numeric|min:0',
+            'colors' => 'required|array',      // <=== ini
+            'colors.*' => 'required|string',   // <=== dan ini
+            'sizes' => 'required|array',
+            'sizes.*' => 'required|string',
+            'stocks' => 'required|array',
+            'stocks.*' => 'array',
+            'stocks.*.*' => 'required|integer|min:0',
+        ]);
 
         DB::beginTransaction();
 
@@ -101,11 +101,10 @@ class ProductController extends Controller
 
             DB::commit();
 
-            return response()->json(['message' => 'Produk berhasil dibuat'], 201);
-
+            return redirect()->back()->with('success', 'Produk berhasil dibuat!');
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['error' => 'Gagal menyimpan produk', 'detail' => $e->getMessage()], 500);
+            return redirect()->back()->with('error', 'Produk gagal dibuat!');
         }
     }
 }
