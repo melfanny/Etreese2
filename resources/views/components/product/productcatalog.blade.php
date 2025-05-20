@@ -55,32 +55,17 @@
 
 <section class="products-section">
     <div class="catalog">
-        <div class="product-card">
-            <img src="{{ asset('images/kemejahitam.jpg') }}" alt="Ethereal Bloom">
-            <div class="product-footer">
-                <span class="product-name">Ethereal Bloom</span>
-                <button class="cart-button">
-                    <img src="{{ asset('images/whitecartlogo.png') }}" alt="Cart" />
-                </button>
+        @foreach ($products as $product)
+            <div class="product-card">
+                <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('images/default.jpg') }}" alt="{{ $product->name }}">
+                <div class="product-footer">
+                    <span class="product-name">{{ $product->name }}</span>
+                    <span class="product-price">Rp{{ number_format($product->price, 0, ',', '.') }}</span>
+                    <button class="cart-button">
+                        <img src="{{ asset('images/whitecartlogo.png') }}" alt="Cart" />
+                    </button>
+                </div>
             </div>
-        </div>
-        <div class="product-card">
-            <img src="{{ asset('images/kemejahitam.jpg') }}" alt="Blooming Serenity">
-            <div class="product-footer">
-                <span class="product-name">Blooming Serenity</span>
-                <button class="cart-button">
-                    <img src="{{ asset('images/whitecartlogo.png') }}" alt="Cart" />
-                </button>
-            </div>
-        </div>
-        <div class="product-card">
-            <img src="{{ asset('images/kemejahitam.jpg') }}" alt="Ethereal Bloom">
-            <div class="product-footer">
-                <span class="product-name">Ethereal Bloom</span>
-                <button class="cart-button">
-                    <img src="{{ asset('images/whitecartlogo.png') }}" alt="Cart" />
-                </button>
-            </div>
-        </div>
+        @endforeach
     </div>
 </section>

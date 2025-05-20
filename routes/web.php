@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\UserProductController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -14,9 +15,9 @@ Route::get('/Home', function () {
     return view('home');
 })->name('home');
 
-Route::get('/Products', function () {
-    return view('products');
-})->name('products');
+
+Route::get('/Products', [UserProductController::class, 'index'])->name('products');
+
 
 Route::get('/Cart', function () {
     return view('cart');
