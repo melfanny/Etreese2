@@ -61,7 +61,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::delete('products/{id}', [ProductController::class, 'destroy'])->name('products.destroy'); // hapus produk
 });
 
-
+Route::get('/products/{id}', [UserProductController::class, 'show'])->name('product.productdetails');
 
 
 require __DIR__ . '/auth.php';

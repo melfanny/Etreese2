@@ -17,4 +17,11 @@ class UserProductController extends Controller
         $products = Product::select(['id', 'name', 'image', 'price'])->get();
         return view('products', compact('products'));
     }
+
+    public function show($id)
+{
+    $product = Product::findOrFail($id);
+    return view('product-details', compact('product'));
 }
+}
+

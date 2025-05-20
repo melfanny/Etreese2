@@ -56,16 +56,18 @@
 <section class="products-section">
     <div class="catalog">
         @foreach ($products as $product)
-            <div class="product-card">
-                <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('images/default.jpg') }}" alt="{{ $product->name }}">
-                <div class="product-footer">
-                    <span class="product-name">{{ $product->name }}</span>
-                    <span class="product-price">Rp{{ number_format($product->price, 0, ',', '.') }}</span>
-                    <button class="cart-button">
-                        <img src="{{ asset('images/whitecartlogo.png') }}" alt="Cart" />
-                    </button>
+             <a href="{{ route('product.productdetails', $product->id) }}">
+                <div class="product-card">
+                    <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('images/default.jpg') }}" alt="{{ $product->name }}">
+                    <div class="product-footer">
+                        <span class="product-name">{{ $product->name }}</span>
+                        <span class="product-price">Rp{{ number_format($product->price, 0, ',', '.') }}</span>
+                        <button class="cart-button">
+                            <img src="{{ asset('images/whitecartlogo.png') }}" alt="Cart" />
+                        </button>
+                    </div>
                 </div>
-            </div>
+            </a>
         @endforeach
     </div>
 </section>
