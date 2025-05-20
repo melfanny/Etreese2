@@ -110,54 +110,40 @@
         }
     </style>
 
-    <div class="dashboard-container">
+    <class="dashboard-container">
         <div class="dashboard-header">
             <a href="{{ route('admin.products.create') }}" class="add-button">+ Add New</a>
         </div>
-
-
         <div class="product-grid">
-            {{-- Product Card 1 --}}
-            <div class="product-card">
-                <div class="img-wrapper">
-                    <img src="https://contents.mediadecathlon.com/p2157319/k$45a8143f29ae498e05be9c1588d95135/kaos-running-dry-fit-baju-lari-pria-breathable-hitam-decathlon-8488034.jpg?f=1920x0&format=auto"
-                        alt="Ethereal Bloom">
-                </div>
-                <div class="product-name">Ethereal Bloom</div>
-                <div class="action-buttons">
-                    <button class="edit-btn"><i class="fas fa-pen"></i> Edit</button>
-                    <button class="delete-btn"><i class="fas fa-trash"></i> Delete</button>
-                </div>
-            </div>
+            <div class="product-grid">
+                @foreach ($products as $product)
+                    <div class="product-card">
+                        <div class="img-wrapper">
+                            @if ($product->image)
+                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}">
+                            @else
+                                <img src="https://via.placeholder.com/500x450?text=No+Image" alt="No Image">
+                            @endif
+                        </div>
+                        <div class="product-name">{{ $product->name }}</div>
+                        <div class="action-buttons">
+                            <!-- Edit -->
+                            <a href="{{ route('admin.products.edit', $product->id) }}">
+                                <button class="edit-btn"><i class="fas fa-pen"></i> Edit</button>
+                            </a>
 
-            {{-- Product Card 2 --}}
-            <div class="product-card">
-                <div class="img-wrapper">
-                    <img src="https://png.pngtree.com/thumb_back/fh260/background/20230630/pngtree-3d-render-of-a-plain-white-t-shirt-image_3692593.jpg"
-                        alt="Ethereal Bloom">
-                </div>
-                <div class="product-name">Ethereal Bloom</div>
-                <div class="action-buttons">
-                    <button class="edit-btn"><i class="fas fa-pen"></i> Edit</button>
-                    <button class="delete-btn"><i class="fas fa-trash"></i> Delete</button>
-                </div>
-            </div>
-
-
-            {{-- Product Card 3 --}}
-            <div class="product-card">
-                <div class="img-wrapper">
-                    <img src="https://parto.id/asset/foto_produk/Baju_kaos_jpg_171574711527.jpg" alt="Ethereal Bloom">
-                </div>
-                <div class="product-name">Ethereal Bloom</div>
-                <div class="action-buttons">
-                    <button class="edit-btn"><i class="fas fa-pen"></i> Edit</button>
-                    <button class="delete-btn"><i class="fas fa-trash"></i> Delete</button>
-                </div>
+                            <!-- Delete -->
+                            <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST"
+                                style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus produk ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="delete-btn"><i class="fas fa-trash"></i> Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                @endforeach
             </div>
 
         </div>
-    </div>
-
-    @include('layouts.footer')
+        @include('layouts.footer')
 @endsection

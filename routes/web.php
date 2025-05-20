@@ -53,9 +53,13 @@ Route::prefix('admin')->group(function () {
 #Route::get('/products/create', [ProductController::class, 'create'])->name('admin.products.create');
 
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::get('products/create', [ProductController::class, 'create'])->name('products.create');
-    Route::post('products/create', [ProductController::class, 'store'])->name('products.store');
+    Route::get('products', [ProductController::class, 'index'])->name('products.products_admin'); // menampilkan semua produk
+    Route::get('products/create', [ProductController::class, 'create'])->name('products.create'); // form tambah produk
+    Route::post('products/create', [ProductController::class, 'store'])->name('products.store'); // simpan produk baru
+    Route::get('products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit'); // form edit produk
+    Route::delete('products/{id}', [ProductController::class, 'destroy'])->name('products.destroy'); // hapus produk
 });
+
 
 
 

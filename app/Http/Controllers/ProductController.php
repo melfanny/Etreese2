@@ -12,6 +12,32 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
+    public function index()
+    {
+        $products = Product::all();
+        return view('admin.products.products_admin', compact('products'));
+    }
+
+    public function edit($id)
+    {
+        $product = Product::findOrFail($id);
+        return view('admin.products.edit', compact('product'));
+    }
+
+    public function destroy($id)
+    {
+        $product = Product::findOrFail($id);
+
+        // Hapus gambar jika ada
+        if ($product->image && Storage::disk('public')->exists($product->image)) {
+            Storage::disk('public')->delete($product->image);
+        }
+
+        $product->delete();
+        return redirect()->route('admin.products.products_admin')->with('success', 'Produk berhasil dihapus.');
+    }
+
+
     public function create()
     {
         return view('admin.products.add_new');
@@ -32,6 +58,7 @@ class ProductController extends Controller
             'stocks.*' => 'array',
             'stocks.*.*' => 'required|integer|min:0',
         ]);
+
 
         DB::beginTransaction();
 
