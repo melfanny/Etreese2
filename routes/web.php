@@ -3,8 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\AdminController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\ProductController;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Admin\DashboardController;
 
 Route::get('/', function () {
@@ -53,8 +52,10 @@ Route::prefix('admin')->group(function () {
 });
 #Route::get('/products/create', [ProductController::class, 'create'])->name('admin.products.create');
 
-
-
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('products/create', [ProductController::class, 'create'])->name('products.create');
+    Route::post('products/create', [ProductController::class, 'store'])->name('products.store');
+});
 
 
 

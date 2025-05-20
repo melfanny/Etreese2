@@ -2,17 +2,24 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    use HasFactory;
-    protected $fillable = [
-        'name',
-        'price',
-        'image',
-        'description',
-        'stock',
-    ];
+    protected $fillable = ['name', 'deskripsi', 'image', 'price'];
+
+    public function colors()
+    {
+        return $this->hasMany(Color::class);
+    }
+
+    public function sizes()
+    {
+        return $this->hasMany(Size::class);
+    }
+
+    public function stocks()
+    {
+        return $this->hasMany(Stock::class);
+    }
 }
