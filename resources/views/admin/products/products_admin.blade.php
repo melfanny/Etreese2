@@ -110,7 +110,7 @@
         }
     </style>
 
-    <class="dashboard-container">
+    <div class="dashboard-container">
         <div class="dashboard-header">
             <a href="{{ route('admin.products.create') }}" class="add-button">+ Add New</a>
         </div>
@@ -129,8 +129,9 @@
                         <div class="action-buttons">
                             <!-- Edit -->
                             <a href="{{ route('admin.products.edit', $product->id) }}">
-                                <button class="edit-btn"><i class="fas fa-pen"></i> Edit</button>
+                                <button class="edit-btn">Edit</button>
                             </a>
+
 
                             <!-- Delete -->
                             <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST"

@@ -32,6 +32,32 @@
         <!-- Page Content -->
         @yield('content')
 
+        <!-- SweetAlert Script -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        @if(session('success'))
+            <script>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Sukses!',
+                    text: @json(session('success')),
+                    confirmButtonColor: '#3085d6'
+                });
+            </script>
+        @endif
+
+        @if(session('error'))
+            <script>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: @json(session('error')),
+                    confirmButtonColor: '#d33'
+                });
+            </script>
+        @endif
+
+
     </div>
 </body>
 
