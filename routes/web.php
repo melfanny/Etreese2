@@ -17,12 +17,13 @@ Route::get('/Home', function () {
 })->name('home');
 
 
-Route::get('/Products', [UserProductController::class, 'index'])->name('products');
+Route::get('/Products', [UserProductController::class, 'index'])->name('products'); //menampilkan katalog produk pelanggan
 
 
-Route::get('/Cart', function () {
-    return view('cart');
-})->name('cart');
+// Route::get('/Cart', function () {
+//     return view('cart');
+// })->name('cart');
+
 
 Route::get('/AboutUs', function () {
     return view('aboutus');
@@ -62,15 +63,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::delete('products/{id}', [ProductController::class, 'destroy'])->name('products.destroy'); // hapus produk
 });
 
-Route::get('/products/{id}', [UserProductController::class, 'show'])->name('product.productdetails');
+Route::get('/products/{id}', [UserProductController::class, 'show'])->name('product.productdetails'); // menampilkan produk detal
+Route::get('/products', [UserProductController::class, 'index'])->name('products.index'); // menampilkan produk berdasarkan index ketika melakukan search
 
 Route::middleware('auth')->group(function () {
-    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-    Route::get('/cart/add/{id}', [CartController::class, 'addToCart'])->name('cart.add');
-    Route::delete('/cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
-    Route::delete('/cart/remove-selected', [CartController::class, 'removeSelected'])->name('cart.removeSelected');
-    Route::get('/cart/decrement/{id}', [CartController::class, 'decrement'])->name('cart.decrement');
-    Route::get('/cart/increment/{id}', [CartController::class, 'increment'])->name('cart.increment');
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index'); // menampilkan isi page cart
+    Route::get('/cart/add/{id}', [CartController::class, 'addToCart'])->name('cart.add'); // tambah produk ke cart
+    Route::delete('/cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove'); // hapus semua produk dari cart
+    Route::delete('/cart/remove-selected', [CartController::class, 'removeSelected'])->name('cart.removeSelected'); // menghapus produk tertentu dari cart
+    Route::get('/cart/decrement/{id}', [CartController::class, 'decrement'])->name('cart.decrement'); //menambah kuantitas produk
+    Route::get('/cart/increment/{id}', [CartController::class, 'increment'])->name('cart.increment'); // mengurangi kuantitas produk 
 });
 
 

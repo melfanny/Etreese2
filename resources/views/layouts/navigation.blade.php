@@ -84,7 +84,7 @@
         <img src="{{ asset('images/logo.png') }}" alt="Etreese Logo">
     </div>
     <div class="nav-right">
-        <a href="{{ route('cart') }}" class="nav-link {{ request()->routeIs('cart') ? 'active' : '' }}">CART</a>
+        <a href="{{ route('cart.index') }}" class="nav-link {{ request()->routeIs('cart.index') ? 'active' : '' }}">CART</a>
         <a href="{{ route('aboutus') }}" class="nav-link {{ request()->routeIs('aboutus') ? 'active' : '' }}">ABOUT
             US</a>
         <i class="fas fa-bell icons"></i>

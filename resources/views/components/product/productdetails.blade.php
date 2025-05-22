@@ -155,14 +155,17 @@
  <section class="product-detail-section">
         <section>
         <div class="product-container">
-            <!--  Product Image -->
+            <!--  Gambar Produk (ambil dari database langsung) -->
             <div class="product-image">
                 <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}">
                  <section class="price-cart-row">
+                    <!-- Harga Produk (ambil dari database langsung) -->
                     <label class="section-label price-cart">Price:</label>
                     <span class="price-value">Rp{{ number_format($product->price, 0, ',', '.') }}</span>
-                    <form method="GET" action="{{ route('cart.add', $product->id) }}">
+                    <!-- Direct ke page cart ketika menekan tombol cart untuk menambahkan produk ke cart -->
+                    <form method="GET" action="{{ route('cart.add', $product->id) }}" id="addToCartForm">
                         @csrf
+                        <input type="hidden" name="size_id" id="selectedSizeId">
                         <button class="cart-btn" type="submit">
                             <img src="{{ asset('images/cartlogo.png') }}" alt="Add to Cart">
                         </button>
@@ -170,7 +173,7 @@
                 </section>
             </div>
 
-            <!-- Product Info -->
+            <!-- Informasi Produk (ambil dari database) -->
             <div class="product-info">
                 <label class="section-label">Product name</label>
                 <div class="product-summary">
@@ -183,14 +186,16 @@
                 </div>
                 </section>
 
+                <!-- Ukuran Produk (ambil dari form input button pelanggan) -->
                 <section class="product-options">
                     <div class="option-group">
                         <label class="section-label">Size:</label>
                         @foreach ($product->sizes as $size)
-                            <button class="option-btn">{{ $size->name }}</button>
+                            <button type="button" class="option-btn size-btn" data-id="{{ $size->id }}">{{ $size->name }}</button>
                         @endforeach
                     </div>
 
+                    <!-- Warna Produk (ambil dari database langsung) -->
                     <div class="option-group">
                         <label class="section-label">Color:</label>
                         @foreach ($product->colors as $color)
@@ -199,6 +204,7 @@
                     </div>
                 </section>
 
+                <!-- Stock Produk (ambil dari database langsung) -->
                 <section class="stock">
                     <div class="option-group">
                         <label class="section-label">Stock:</label>
@@ -215,16 +221,25 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const optionGroups = document.querySelectorAll('.option-group');
+        const sizeButtons = document.querySelectorAll('.size-btn');
+        const sizeInput = document.getElementById('selectedSizeId');
 
-        optionGroups.forEach(group => {
-            const buttons = group.querySelectorAll('button');
-            buttons.forEach(btn => {
-                btn.addEventListener('click', function () {
-                    buttons.forEach(b => b.classList.remove('selected'));
-                    this.classList.add('selected');
-                });
+        sizeButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                // Hapus class selected dari semua tombol
+                sizeButtons.forEach(btn => btn.classList.remove('selected'));
+                // Tambahkan class selected ke tombol yang diklik
+                this.classList.add('selected');
+                // Simpan id size ke input hidden
+                sizeInput.value = this.dataset.id;
             });
+        });
+
+    document.getElementById('addToCartForm').addEventListener('submit', function (e) {
+            if (!sizeInput.value) {
+                e.preventDefault();
+                alert('Silakan pilih ukuran terlebih dahulu!');
+            }
         });
     });
 </script>

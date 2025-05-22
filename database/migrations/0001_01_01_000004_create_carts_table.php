@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Tabel cart setiap pelanggan yg memiliki akun untuk menyimpan id user, id product, kuantitas, warna, ukuran, dan kuantitas
         Schema::create('carts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
@@ -25,6 +26,7 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
+    // fungsi untuk mengubah struktur database
     public function down(): void
     {
         Schema::dropIfExists('carts');
