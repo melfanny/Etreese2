@@ -146,52 +146,106 @@
 </style>
 
 <div class="cart-section">
-    <!-- Item 1 -->
-    <div class="cart-item">
-        <div class="cart-item-left">
-            <input type="checkbox">
-            <img src="{{ asset('images/kemejahitam.jpg') }}" alt="Kemeja 1">
-            <div>
-                <h3>Etreese - Blooming Serenity Kemeja Semi Formal Elegan</h3>
-                <p>Rp150.000</p>
+    @forelse ($carts as $cart)
+        <div class="cart-item">
+            <div class="cart-item-left">
+                <input type="checkbox" class="product-checkbox" value="{{ $cart->id }}" name="cart_checkbox">
+                <img src="{{ asset('storage/' . $cart->product->image) }}" alt="{{ $cart->product->name }}">
+                <div>
+                    <h3>{{ $cart->product->name }}</h3>
+                    <h3>{{ $cart->color->name ?? '-' }}</h3>
+                    <h3>{{ $cart->size->name ?? '-' }}</h3>
+                    <p>Rp{{ number_format($cart->product->price, 0, ',', '.') }}</p>
+                </div>
+            </div>
+
+            <div class="qty-buttons">
+                {{-- Tombol - (decrement) --}}
+                <form action="{{ route('cart.decrement', $cart->product->id) }}" method="GET" style="display:inline;">
+                    <button type="submit">-</button>
+                </form>
+
+                <span>{{ $cart->quantity }}</span>
+
+                {{-- Tombol + (increment) --}}
+                <form action="{{ route('cart.increment', $cart->product->id) }}" method="GET" style="display:inline;">
+                    <button type="submit">+</button>
+                </form>
             </div>
         </div>
-        <div class="qty-buttons">
-            <button>-</button>
-            <span>3</span>
-            <button>+</button>
-        </div>
-    </div>
+    @empty
+        <p style="text-align: center; font-weight: bold;">Tidak Ditemukan Produk di Keranjang.</p>
+    @endforelse
 
-    <!-- Item 2 -->
-    <div class="cart-item">
-        <div class="cart-item-left">
-            <input type="checkbox">
-            <img src="{{ asset('images/kemejaputih.jpg') }}" alt="Kemeja 2">
-            <div>
-                <h3>Etreese - Ethereal Bloom Kemeja Semi Formal Elegan</h3>
-                <p>Rp150.000</p>
-            </div>
-        </div>
-        <div class="qty-buttons">
-            <button>-</button>
-            <span>1</span>
-            <button>+</button>
-        </div>
-    </div>
-
-    <!-- Footer -->
+    @if ($carts->count())
     <div class="cart-footer">
         <div class="cart-footer-left">
-            <input type="checkbox"> <label>All Product</label>
-            <button class="remove-button">
-            <img src="{{ asset('images/trashlogo.png') }}" alt="Trash Icon">
-            <span>Remove</span>
-        </button>
+            <input type="checkbox" id="checkAll"> <label for="checkAll">All Product</label>
+
+            {{-- Tombol remove satu item (hapus berdasarkan ID cart terakhir di loop) --}}
+            <form id="removeSelectedForm" action="{{ route('cart.removeSelected') }}" method="POST">
+    @csrf
+    @method('DELETE')
+    <input type="hidden" name="cart_ids[]" id="selectedCartIds">
+    <button type="submit" class="remove-button">
+        <img src="{{ asset('images/trashlogo.png') }}" alt="Trash Icon">
+        <span>Remove</span>
+    </button>
+</form>
         </div>
         <div>
-            <span>Total: Rp300.000</span>
-            <a href="#">Checkout (2)</a>
+            <span>Total: Rp{{ number_format($carts->sum(fn($c) => $c->product->price * $c->quantity), 0, ',', '.') }}</span>
+            <a href="#">Checkout ({{ $carts->count() }})</a>
         </div>
     </div>
+    @endif
 </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @if(session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Sukses!',
+                text: @json(session('success')),
+                confirmButtonColor: '#3085d6'
+            });
+        </script>
+    @endif
+
+    <script>
+    // Checklist semua checkbox jika "All Product" dicek
+    document.getElementById('checkAll')?.addEventListener('change', function () {
+        const checkboxes = document.querySelectorAll('.product-checkbox');
+        checkboxes.forEach(cb => cb.checked = this.checked);
+    });
+</script>
+
+<script>
+document.getElementById('removeSelectedForm').addEventListener('submit', function (e) {
+    const selected = [...document.querySelectorAll('.product-checkbox:checked')].map(cb => cb.value);
+
+    if (selected.length === 0) {
+        e.preventDefault();
+        alert('Pilih setidaknya satu produk untuk dihapus.');
+        return;
+    }
+
+    // Isi input hidden dengan cart_ids
+    const hiddenInput = document.getElementById('selectedCartIds');
+    hiddenInput.remove(); // hapus jika ada sebelumnya
+
+    selected.forEach(id => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'cart_ids[]';
+        input.value = id;
+        this.appendChild(input);
+    });
+});
+</script>
+
+
+
+

@@ -1,14 +1,7 @@
 <style>
 .product-detail-section {
-
     padding: 40px;
     background-color: #5C2E00;
-
-}
-
-/* Product Detail Section */
-.product-detail {
-    padding: 40px;
 }
 
 .product-container {
@@ -21,15 +14,19 @@
     padding: 30px;
 }
 
-/* Left Side */
 .product-image img {
-    width: 350px;
+    margin-top: 15px;
     border-radius: 20px;
-    background-color: white;
     padding: 15px;
 }
 
-/* Right Side */
+.cart-image img {
+    margin-top: 15px;
+    border-radius: 20px;
+    padding: 15px;
+    margin-left: 50px;
+}
+
 .product-info {
     flex: 1;
     display: flex;
@@ -51,10 +48,8 @@
 
 .product-description p {
     font-size: 16px;
-    line-height: 1.5;
 }
 
-/* Option Buttons */
 .option-group {
     margin-top: 10px;
 }
@@ -67,7 +62,7 @@
 
 .option-group button {
     background-color: white;
-    color: #3F1F0A;
+    color: #000000;
     border: none;
     margin: 5px 10px 5px 0;
     padding: 10px 20px;
@@ -81,69 +76,111 @@
     background-color: #ffdbb4;
 }
 
-/* Stock & Sold */
-.stock-sold {
+.stock{
     display: flex;
     gap: 40px;
     font-size: 16px;
 }
 
-/* Price & Cart */
 .price-cart {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.price {
-    font-size: 24px;
-    font-weight: bold;
-    color: #000000;
+    margin-left: 20px;
 }
 
 .cart-btn {
-    background-color: #fff;
     border: none;
     padding: 10px;
     border-radius: 12px;
     cursor: pointer;
+    padding: 0;
+    background: none;
     transition: transform 0.2s ease;
+}
+
+.cart-btn img {
+    width: 60px;
+    border-radius: 12px;
+    padding: 5px;
 }
 
 .cart-btn:hover {
     transform: scale(1.05);
 }
 
-.cart-btn img {
-    width: 30px;
+.price-cart-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
 
-img {
-    width: 50px;
+.price-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #000000;
+}
+
+
+.product-summary {
+    background-color: #FBE7D0;
+    padding: 20px 25px;
+    border-radius: 16px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.option-group button.selected {
+    background-color: #5C2E00;
+    color: white;
+}
+
+.stock-values {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.stock-item {
+    background-color: #FBE7D0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    color: #3F1F0A;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
 }
 
 </style>
  
  <section class="product-detail-section">
-        <section class="product-detail">
+        <section>
         <div class="product-container">
-            <!-- Left Side: Product Image -->
+            <!--  Product Image -->
             <div class="product-image">
                 <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}">
+                 <section class="price-cart-row">
+                    <label class="section-label price-cart">Price:</label>
+                    <span class="price-value">Rp{{ number_format($product->price, 0, ',', '.') }}</span>
+                    <form method="GET" action="{{ route('cart.add', $product->id) }}">
+                        @csrf
+                        <button class="cart-btn" type="submit">
+                            <img src="{{ asset('images/cartlogo.png') }}" alt="Add to Cart">
+                        </button>
+                    </form>
+                </section>
             </div>
 
-            <!-- Right Side: Product Info -->
+            <!-- Product Info -->
             <div class="product-info">
-
-            
-                
-                    <label class="section-label">Product name</label>
+                <label class="section-label">Product name</label>
+                <div class="product-summary">
                     <h2>{{ $product->name }}</h2>
-                
-
+                </div>
                 <section class="product-description">
                     <label class="section-label">Description</label>
+                <div class="product-summary">
                     <p>{{ $product->deskripsi }}</p>
+                </div>
                 </section>
 
                 <section class="product-options">
@@ -157,26 +194,37 @@ img {
                     <div class="option-group">
                         <label class="section-label">Color:</label>
                         @foreach ($product->colors as $color)
-                            <button class="option-btn">{{ $color->name }}</button>
+                            <div class="stock-item">{{ $color->name }}</div>
                         @endforeach
                     </div>
                 </section>
 
-                <section class="stock-sold">
-                    <div class="option stock-sold">
+                <section class="stock">
+                    <div class="option-group">
                         <label class="section-label">Stock:</label>
+                    <div class="stock-values">
                         @foreach ($product->stocks as $stock)
-                        <button>{{ $stock->quantity }}</button>
+                            <div class="stock-item">{{ $stock->quantity }}</div>
                         @endforeach
                     </div>
-                </section>
-                
-                <section class="price-cart">
-                    <label class="section-label">Price:</label>
-                    <span class="price">Rp{{ number_format($product->price, 0, ',', '.') }}</span>
-                    <button class="cart-button"><img src="{{ asset('images/cartlogo.png') }}" alt="Add to Cart"></button>
                 </section>
             </div>
         </div>
     </section>
 </section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const optionGroups = document.querySelectorAll('.option-group');
+
+        optionGroups.forEach(group => {
+            const buttons = group.querySelectorAll('button');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    buttons.forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+        });
+    });
+</script>

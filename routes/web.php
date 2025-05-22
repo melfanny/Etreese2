@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\UserProductController;
+use App\Http\Controllers\CartController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -58,11 +59,19 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('products/create', [ProductController::class, 'create'])->name('products.create'); // form tambah produk
     Route::post('products/create', [ProductController::class, 'store'])->name('products.store'); // simpan produk baru
     Route::get('products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit'); // form edit produk
-    Route::put('products/{id}', [ProductController::class, 'update'])->name('products.update');
     Route::delete('products/{id}', [ProductController::class, 'destroy'])->name('products.destroy'); // hapus produk
 });
 
 Route::get('/products/{id}', [UserProductController::class, 'show'])->name('product.productdetails');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::get('/cart/add/{id}', [CartController::class, 'addToCart'])->name('cart.add');
+    Route::delete('/cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+    Route::delete('/cart/remove-selected', [CartController::class, 'removeSelected'])->name('cart.removeSelected');
+    Route::get('/cart/decrement/{id}', [CartController::class, 'decrement'])->name('cart.decrement');
+    Route::get('/cart/increment/{id}', [CartController::class, 'increment'])->name('cart.increment');
+});
 
 
 require __DIR__ . '/auth.php';
