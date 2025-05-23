@@ -89,7 +89,7 @@
 <div class="home-upcoming">
     <!-- TOP HEADER -->
     <div class="home-upcoming-header">
-        UPCOMING SERIES: NUSANTARA VIBE
+        UPCOMING SERIES
     </div>
 
     <!-- MAIN CONTENT -->

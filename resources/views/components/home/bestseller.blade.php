@@ -29,16 +29,19 @@
     .home-bestseller-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 30px;
+        gap: 20px;
     }
 
     .home-bestseller-card {
-        background-color: #E6B597;
-        border-radius: 16px;
+        width: 100%;
+        background-color: #fbe7d0;
+        border-radius: 20px;
         overflow: hidden;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-        text-align: left;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
 
     .home-bestseller-card:hover {
@@ -47,9 +50,11 @@
     }
 
     .home-bestseller-card img {
-        width: 100%;
-        height: auto;
-        display: block;
+        width: 100$;
+        height: 300px;
+        object-fit: cover;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
     }
 
     .home-bestseller-card .card-body {
@@ -101,35 +106,31 @@
     <h2 class="home-bestseller-title">Buyer’s Favourite</h2>
     <div class="home-bestseller-grid">
         <div class="home-bestseller-card">
-            <img src="https://i.pinimg.com/736x/6e/61/2f/6e612f5568892b1d88f8ab58e518310b.jpg"
-                alt="Ethereal Bloom - Black">
-            <div class="card-body">
-                <a href="{{ route('products') }}" class="btn-explore">Explore</a>
-                <h4>Ethereal Bloom - Black</h4>
-            </div>
-        </div>
-        <div class="home-bestseller-card">
-            <img src="https://i.pinimg.com/736x/6e/61/2f/6e612f5568892b1d88f8ab58e518310b.jpg"
-                alt="Ethereal Bloom - Black">
-            <div class="card-body">
-                <a href="{{ route('products') }}" class="btn-explore">Explore</a>
-                <h4>Ethereal Bloom - Black</h4>
-            </div>
-        </div>
-        <div class="home-bestseller-card">
-            <img src="https://i.pinimg.com/736x/6e/61/2f/6e612f5568892b1d88f8ab58e518310b.jpg"
-                alt="Ethereal Bloom - White">
+            <img src="../images/produk1.jpeg" alt="Ethereal Bloom - Black">
             <div class="card-body">
                 <a href="{{ route('products') }}" class="btn-explore">Explore</a>
                 <h4>Ethereal Bloom - White</h4>
             </div>
         </div>
         <div class="home-bestseller-card">
-            <img src="https://i.pinimg.com/736x/6e/61/2f/6e612f5568892b1d88f8ab58e518310b.jpg"
-                alt="Blooming Serenity - Navy">
+            <img src="../images/produk2.jpeg" alt="Ethereal Bloom - Black">
+            <div class="card-body">
+                <a href="{{ route('products') }}" class="btn-explore">Explore</a>
+                <h4>Ethereal Bloom - Black</h4>
+            </div>
+        </div>
+        <div class="home-bestseller-card">
+            <img src="../images/produk3.jpeg" alt="Ethereal Bloom - White">
             <div class="card-body">
                 <a href="{{ route('products') }}" class="btn-explore">Explore</a>
                 <h4>Blooming Serenity - Navy</h4>
+            </div>
+        </div>
+        <div class="home-bestseller-card">
+            <img src="../images/produk4.jpeg" alt="Blooming Serenity - Navy">
+            <div class="card-body">
+                <a href="{{ route('products') }}" class="btn-explore">Explore</a>
+                <h4>Ethereal Bloom - Navy</h4>
             </div>
         </div>
     </div>
