@@ -46,6 +46,7 @@ return new class extends Migration {
 
     public function down(): void
     {
+        Schema::dropIfExists('orders');
         Schema::dropIfExists('stocks');
         Schema::dropIfExists('sizes');
         Schema::dropIfExists('colors');

@@ -7,6 +7,8 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\UserProductController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\Admin\AdminOrderController;
+use App\Http\Controllers\OrderController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -75,5 +77,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/cart/increment/{id}', [CartController::class, 'increment'])->name('cart.increment'); // mengurangi kuantitas produk 
 });
 
+// User order routes
+Route::middleware(['auth'])->group(function () {
+    Route::post('/checkout', [OrderController::class, 'checkout'])->name('order.checkout');
+    Route::get('/payment/{order}', [OrderController::class, 'payment'])->name('order.payment');
+    Route::post('/payment/{order}/pay', [OrderController::class, 'pay'])->name('order.pay');
+    Route::get('/my-orders', [OrderController::class, 'myOrders'])->name('order.myorders');
+    Route::post('/order/{order}/complete', [OrderController::class, 'complete'])->name('order.complete');
+});
 
+// Admin order routes
+Route::prefix('admin')->middleware(['auth'])->group(function () {
+    Route::get('orders', [AdminOrderController::class, 'index'])->name('admin.orders');
+    Route::post('orders/{order}/confirm', [AdminOrderController::class, 'confirmPayment'])->name('admin.orders.confirm');
+    Route::post('orders/{order}/ship', [AdminOrderController::class, 'ship'])->name('admin.orders.ship');
+});
 require __DIR__ . '/auth.php';

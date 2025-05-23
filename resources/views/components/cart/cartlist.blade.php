@@ -12,11 +12,11 @@
         background-color: #ffffff;
         padding: 30px;
         border-radius: 15px;
-        margin-bottom: 50px; /* biar center */
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-bottom: 50px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         flex-wrap: wrap;
-        max-width: 1800px;  /* Supaya gak mentok kiri kanan */
-        min-height: 200px;  /* Supaya terlihat "tinggi" */
+        max-width: 1800px;
+        min-height: 200px;
     }
 
 
@@ -69,17 +69,16 @@
     }
 
     .cart-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: 15px;
-    margin-bottom: 50px; /* biar center */
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    flex-wrap: wrap;
-    max-width: 1800px;  /* Supaya gak mentok kiri kanan */
-    
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 50px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        flex-wrap: wrap;
+        max-width: 1800px;
     }
 
     .cart-footer-left {
@@ -113,21 +112,22 @@
     }
 
     .remove-button {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background-color: white;
-    border: none;
-    font-size: 18px;
-    font-weight: bold;
-    color: black;
-    cursor: pointer;
-}
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background-color: white;
+        border: none;
+        font-size: 18px;
+        font-weight: bold;
+        color: black;
+        cursor: pointer;
+    }
 
-.remove-button img {
-    width: 25px;
-    height: 25px;
-}
+    .remove-button img {
+        width: 25px;
+        height: 25px;
+    }
+
     @media (max-width: 600px) {
         .cart-item {
             flex-direction: column;
@@ -178,43 +178,49 @@
     @endforelse
 
     @if ($carts->count())
-    <div class="cart-footer">
-        <div class="cart-footer-left">
-            <input type="checkbox" id="checkAll"> <label for="checkAll">All Product</label>
+        <div class="cart-footer">
+            <div class="cart-footer-left">
+                <input type="checkbox" id="checkAll"> <label for="checkAll">All Product</label>
 
-            {{-- Tombol remove satu item (hapus berdasarkan ID cart terakhir di loop) --}}
-            <form id="removeSelectedForm" action="{{ route('cart.removeSelected') }}" method="POST">
-    @csrf
-    @method('DELETE')
-    <input type="hidden" name="cart_ids[]" id="selectedCartIds">
-    <button type="submit" class="remove-button">
-        <img src="{{ asset('images/trashlogo.png') }}" alt="Trash Icon">
-        <span>Remove</span>
-    </button>
-</form>
+                {{-- Tombol remove satu item (hapus berdasarkan ID cart terakhir di loop) --}}
+                <form id="removeSelectedForm" action="{{ route('cart.removeSelected') }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <input type="hidden" name="cart_ids[]" id="selectedCartIds">
+                    <button type="submit" class="remove-button">
+                        <img src="{{ asset('images/trashlogo.png') }}" alt="Trash Icon">
+                        <span>Remove</span>
+                    </button>
+                </form>
+            </div>
+            <div>
+                <span>Total:
+                    Rp{{ number_format($carts->sum(fn($c) => $c->product->price * $c->quantity), 0, ',', '.') }}</span>
+                <form action="{{ route('order.checkout') }}" method="POST" style="display:inline;">
+                    @csrf
+                    {{-- Kirim semua cart_id yang dicentang --}}
+                    <input type="hidden" name="cart_ids" id="checkoutCartIds">
+                    <button type="submit" class="checkout-btn">Checkout ({{ $carts->count() }})</button>
+                </form>
+            </div>
         </div>
-        <div>
-            <span>Total: Rp{{ number_format($carts->sum(fn($c) => $c->product->price * $c->quantity), 0, ',', '.') }}</span>
-            <a href="#">Checkout ({{ $carts->count() }})</a>
-        </div>
-    </div>
     @endif
 </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    @if(session('success'))
-        <script>
-            Swal.fire({
-                icon: 'success',
-                title: 'Sukses!',
-                text: @json(session('success')),
-                confirmButtonColor: '#3085d6'
-            });
-        </script>
-    @endif
-
+@if(session('success'))
     <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Sukses!',
+            text: @json(session('success')),
+            confirmButtonColor: '#3085d6'
+        });
+    </script>
+@endif
+
+<script>
     // Checklist semua checkbox jika "All Product" dicek
     document.getElementById('checkAll')?.addEventListener('change', function () {
         const checkboxes = document.querySelectorAll('.product-checkbox');
@@ -223,29 +229,37 @@
 </script>
 
 <script>
-document.getElementById('removeSelectedForm').addEventListener('submit', function (e) {
-    const selected = [...document.querySelectorAll('.product-checkbox:checked')].map(cb => cb.value);
+    document.getElementById('removeSelectedForm').addEventListener('submit', function (e) {
+        const selected = [...document.querySelectorAll('.product-checkbox:checked')].map(cb => cb.value);
 
-    if (selected.length === 0) {
-        e.preventDefault();
-        alert('Pilih setidaknya satu produk untuk dihapus.');
-        return;
-    }
+        if (selected.length === 0) {
+            e.preventDefault();
+            alert('Pilih setidaknya satu produk untuk dihapus.');
+            return;
+        }
 
-    // Isi input hidden dengan cart_ids
-    const hiddenInput = document.getElementById('selectedCartIds');
-    hiddenInput.remove(); // hapus jika ada sebelumnya
+        // Isi input hidden dengan cart_ids
+        const hiddenInput = document.getElementById('selectedCartIds');
+        hiddenInput.remove(); // hapus jika ada sebelumnya
 
-    selected.forEach(id => {
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = 'cart_ids[]';
-        input.value = id;
-        this.appendChild(input);
+        selected.forEach(id => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'cart_ids[]';
+            input.value = id;
+            this.appendChild(input);
+        });
     });
-});
 </script>
 
-
-
-
+<script>
+    document.querySelector('.checkout-btn')?.addEventListener('click', function (e) {
+        const selected = [...document.querySelectorAll('.product-checkbox:checked')].map(cb => cb.value);
+        if (selected.length === 0) {
+            e.preventDefault();
+            alert('Pilih setidaknya satu produk untuk checkout.');
+            return;
+        }
+        document.getElementById('checkoutCartIds').value = selected.join(',');
+    });
+</script>
