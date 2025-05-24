@@ -107,7 +107,9 @@
 
 <div class="home-banner">
     <div class="image-container">
-        <img src="https://i.pinimg.com/736x/06/99/ab/0699ab50f9da314b9fd6d09d83814694.jpg" alt="Bloom Series" />
+        @if($home && $home->banner_image)
+            <img src="{{ asset('storage/' . $home->banner_image) }}" alt="Bloom Series" />
+        @endif
         <div class="text-overlay">
             <h1>
                 <span class="highlight">BLOOM SERIES</span><br>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Home;
 
 class AdminController extends Controller
 {
@@ -19,7 +20,9 @@ class AdminController extends Controller
             abort(403, 'Akses ditolak. Halaman ini hanya untuk admin.');
         }
 
-        return view('admin.home_admin');
+        $home = Home::first();
+
+        return view('admin.home_admin', compact('home'));
     }
 
     public function orders()
@@ -65,5 +68,13 @@ class AdminController extends Controller
         }
 
         return view('admin.profile');
+    }
+    public function home_admin()
+    {
+        if (!$this->isAdmin()) {
+            abort(403, 'Akses ditolak. Halaman ini hanya untuk admin.');
+        }
+
+        return view('admin.home');
     }
 }

@@ -9,13 +9,20 @@ use App\Http\Controllers\UserProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\HomeController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
+use App\Models\Home;
+
+use App\Models\Product;
+
 Route::get('/Home', function () {
-    return view('home');
+    $home = Home::first();
+    $products = Product::select(['id', 'name', 'image', 'price'])->get();
+    return view('home', compact('home', 'products'));
 })->name('home');
 
 
@@ -92,4 +99,10 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::post('orders/{order}/confirm', [AdminOrderController::class, 'confirmPayment'])->name('admin.orders.confirm');
     Route::post('orders/{order}/ship', [AdminOrderController::class, 'ship'])->name('admin.orders.ship');
 });
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/admin/home', [HomeController::class, 'edit'])->name('home.edit');
+    Route::post('/admin/home/update', action: [HomeController::class, 'update'])->name('home.update');
+});
+
 require __DIR__ . '/auth.php';

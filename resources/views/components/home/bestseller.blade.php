@@ -50,7 +50,7 @@
     }
 
     .home-bestseller-card img {
-        width: 100$;
+        width: 100%;
         height: 300px;
         object-fit: cover;
         border-top-left-radius: 20px;
@@ -105,33 +105,14 @@
 <section class="home-bestseller-section">
     <h2 class="home-bestseller-title">Buyer’s Favourite</h2>
     <div class="home-bestseller-grid">
-        <div class="home-bestseller-card">
-            <img src="../images/produk1.jpeg" alt="Ethereal Bloom - Black">
-            <div class="card-body">
-                <a href="{{ route('products') }}" class="btn-explore">Explore</a>
-                <h4>Ethereal Bloom - White</h4>
+        @foreach ($products as $product)
+            <div class="home-bestseller-card">
+                <img src="{{ \Illuminate\Support\Facades\Storage::url($product->image) }}" alt="{{ $product->name }}">
+                <div class="card-body">
+                    <a href="{{ route('product.productdetails', ['id' => $product->id]) }}" class="btn-explore">Explore</a>
+                    <h4>{{ $product->name }}</h4>
+                </div>
             </div>
-        </div>
-        <div class="home-bestseller-card">
-            <img src="../images/produk2.jpeg" alt="Ethereal Bloom - Black">
-            <div class="card-body">
-                <a href="{{ route('products') }}" class="btn-explore">Explore</a>
-                <h4>Ethereal Bloom - Black</h4>
-            </div>
-        </div>
-        <div class="home-bestseller-card">
-            <img src="../images/produk3.jpeg" alt="Ethereal Bloom - White">
-            <div class="card-body">
-                <a href="{{ route('products') }}" class="btn-explore">Explore</a>
-                <h4>Blooming Serenity - Navy</h4>
-            </div>
-        </div>
-        <div class="home-bestseller-card">
-            <img src="../images/produk4.jpeg" alt="Blooming Serenity - Navy">
-            <div class="card-body">
-                <a href="{{ route('products') }}" class="btn-explore">Explore</a>
-                <h4>Ethereal Bloom - Navy</h4>
-            </div>
-        </div>
+        @endforeach
     </div>
 </section>

@@ -104,10 +104,13 @@
             <a href="{{ route('products') }}" class="btn-see">See More</a>
         </div>
         <div class="home-upcoming-grid">
-            <img src="../images/nasikuning.png" alt="Nasi kuning">
-            <img src="../images/buburayam.png" alt="Bubur">
-            <img src="../images/nasikuning.png" alt="Bakso">
-            <img src="../images/nasikuning.png" alt="Sate">
+            @for ($i = 1; $i <= 4; $i++)
+                @php $field = 'upcoming_image_' . $i; @endphp
+                @if ($home && $home->$field)
+                    <img src="{{ asset('storage/' . $home->$field) }}" alt="Upcoming {{ $i }}">
+                @endif
+            @endfor
         </div>
     </section>
+
 </div>

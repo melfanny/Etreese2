@@ -76,8 +76,12 @@
 
 <div class="name-what">
     <div class="left-image">
-        <img src="https://i.pinimg.com/736x/b9/46/0b/b9460b24d46c83643a359426230061b7.jpg"
-            alt="Etree Introduction Image">
+        @if($home && $home->what_image_1)
+            <img src="{{ asset('storage/' . $home->what_image_1) }}" alt="Etree Introduction Image">
+        @else
+            <img src="https://i.pinimg.com/736x/b9/46/0b/b9460b24d46c83643a359426230061b7.jpg"
+                alt="Etree Introduction Image">
+        @endif
     </div>
     <div class="right-content">
         <div class="title">
