@@ -23,6 +23,7 @@ class AdminOrderController extends Controller
         // Statistik dari semua order (TIDAK TERPENGARUH FILTER)
         $totalOrders = Order::count();
         $waitingPayment = Order::where('status', 'waiting_payment')->count();
+        $paid = Order::where('status', 'paid')->count();
         $processed = Order::where('status', 'processed')->count();
         $shipped = Order::where('status', 'shipped')->count();
         $completed = Order::where('status', 'completed')->count();
@@ -33,6 +34,7 @@ class AdminOrderController extends Controller
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
+
         if ($request->filled('q')) {
             $q = $request->q;
             $query->where(function ($sub) use ($q) {
@@ -41,22 +43,19 @@ class AdminOrderController extends Controller
                     ->orWhere('status', 'ILIKE', "%$q%")
                     ->orWhereRaw("to_char(created_at, 'YYYY-MM-DD') ILIKE ?", ["%$q%"])
                     ->orWhereRaw("CAST(total AS TEXT) ILIKE ?", ["%$q%"]);
+                if (is_numeric($q)) {
+                    $sub->orWhere('id', $q);
+                }
             });
         }
 
-
         $orders = $query->get();
-
-        $totalOrders = $orders->count();
-        $waitingPayment = $orders->where('status', 'waiting_payment')->count();
-        $processed = $orders->where('status', 'processed')->count();
-        $shipped = $orders->where('status', 'shipped')->count();
-        $completed = $orders->where('status', 'completed')->count();
 
         return view('admin.orders', compact(
             'orders',
             'totalOrders',
             'waitingPayment',
+            'paid',
             'processed',
             'shipped',
             'completed'
