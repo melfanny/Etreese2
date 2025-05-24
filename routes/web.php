@@ -10,6 +10,9 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\NotificationController;
+
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -82,6 +85,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/cart/remove-selected', [CartController::class, 'removeSelected'])->name('cart.removeSelected'); // menghapus produk tertentu dari cart
     Route::get('/cart/decrement/{id}', [CartController::class, 'decrement'])->name('cart.decrement'); //menambah kuantitas produk
     Route::get('/cart/increment/{id}', [CartController::class, 'increment'])->name('cart.increment'); // mengurangi kuantitas produk 
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index'); // akses notifikasi 
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
 });
 
 // User order routes

@@ -42,7 +42,7 @@
         }
 
         .image-right {
-            width: 45%;
+            width: 50%;
             height: auto;
             object-fit: cover;
             display: block;
@@ -255,7 +255,7 @@
             </div>
 
             <!-- Image on the right -->
-            <img src="https://i.pinimg.com/736x/8f/41/71/8f41711e801cfe26220e63ebdf128083.jpg" class="image-right" />
+            <img src="/images/peri_anggrek.jpg" class="image-right" />
         </div>
     </div>
     </div>

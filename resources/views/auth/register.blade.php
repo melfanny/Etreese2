@@ -41,7 +41,7 @@
         }
 
         .image-left {
-            width: 45%;
+            width: 50%;
             height: auto;
             object-fit: cover;
             display: block;
@@ -185,7 +185,7 @@
     <div class="content-wrapper">
         <div class="form-container">
             <!-- Image on the left -->
-            <img src="https://i.pinimg.com/736x/8f/41/71/8f41711e801cfe26220e63ebdf128083.jpg" class="image-left" />
+            <img src="/images/peri_etreese.jpg" class="image-left" />
 
             <!-- Form content on the right -->
             <div class="form-content">

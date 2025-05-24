@@ -87,7 +87,7 @@
         <a href="{{ route('cart.index') }}" class="nav-link {{ request()->routeIs('cart.index') ? 'active' : '' }}">CART</a>
         <a href="{{ route('aboutus') }}" class="nav-link {{ request()->routeIs('aboutus') ? 'active' : '' }}">ABOUT
             US</a>
-        <i class="fas fa-bell icons"></i>
+        <a href="{{ route('notifications.index') }}"><i class="fas fa-bell icons"></i></a>
 
         @auth
             <div class="icon-wrapper">
