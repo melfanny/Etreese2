@@ -43,7 +43,7 @@ class CartController extends Controller
     return redirect()->route('cart.index')->with('success', 'Product added to cart.');
 }
 
-# menampilkan informasi produk di cart 
+// menampilkan informasi produk di cart 
 public function index()
 {
     $carts = Cart::with('product', 'color', 'size')->where('user_id', Auth::id())->get();

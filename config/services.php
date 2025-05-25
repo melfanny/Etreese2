@@ -13,6 +13,11 @@ return [
     | a conventional file to locate the various service credentials.
     |
     */
+    'rajaongkir' => [
+    'key' => env('RAJAONGKIR_API_KEY'),
+    'url' => env('RAJAONGKIR_BASE_URL'),
+    ],
+
 
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),

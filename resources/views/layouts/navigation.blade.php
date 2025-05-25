@@ -110,6 +110,9 @@
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}
                         </x-dropdown-link>
+                        <x-dropdown-link :href="route('addresses.index')">
+                            {{ __('Address') }} 
+                        </x-dropdown-link>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <x-dropdown-link :href="route('logout')"
@@ -118,7 +121,7 @@
                             </x-dropdown-link>
                         </form>
                     </x-slot>
-                </x-dropdown>
+                    </x-dropdown>
             </div>
         @endauth
 

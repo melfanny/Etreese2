@@ -15,14 +15,18 @@
     background-color: #8B4513;
     border-radius: 15px;
     width: 300px;
+    height: 300px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
 }
 
 .product-card img {
     width: 100%;
-    height: auto;
+    height: 250px;
     display: block;
     border-radius: 10px;
+    flex-shrink: 0;
 }
 
 .product-footer {
@@ -51,6 +55,10 @@
     width: 30px;
     height: 30px;
 }
+
+.product-price {
+    color: #ffffff;
+}
 </style>
 
 <section class="products-section">
@@ -62,9 +70,7 @@
                     <div class="product-footer">
                         <span class="product-name">{{ $product->name }}</span>
                         <span class="product-price">Rp{{ number_format($product->price, 0, ',', '.') }}</span>
-                        <button class="cart-button">
-                            <img src="{{ asset('images/whitecartlogo.png') }}" alt="Cart" />
-                        </button>
+                        <button class="cart-button"></button>
                     </div>
                 </div>
             </a>
