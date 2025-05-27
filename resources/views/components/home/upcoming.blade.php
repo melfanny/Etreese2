@@ -62,12 +62,17 @@
 
     .home-upcoming-grid img {
         width: 100%;
-        height: auto;
-        border-radius: 100%;
+        aspect-ratio: 1 / 1;
+        /* Ensures square shape */
+        border-radius: 50%;
+        /* Makes it a circle */
         background-color: #EDC2AA;
         padding: 20px;
         box-sizing: border-box;
+        object-fit: cover;
+        /* Ensures image covers the circular area */
     }
+
 
     @media (max-width: 768px) {
         .home-upcoming-section {
@@ -101,7 +106,6 @@
                 IN OUR NEW<br>
                 <mark>PRODUCT?</mark>
             </h2>
-            <a href="{{ route('products') }}" class="btn-see">See More</a>
         </div>
         <div class="home-upcoming-grid">
             @for ($i = 1; $i <= 4; $i++)

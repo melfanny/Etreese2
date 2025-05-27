@@ -40,9 +40,6 @@
             font-weight: bold;
         }
 
-        button:hover {
-            background-color: #5C1E00;
-        }
 
         .preview {
             margin-top: 10px;

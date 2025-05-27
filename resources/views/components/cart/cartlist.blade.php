@@ -149,7 +149,8 @@
     @forelse ($carts as $cart)
         <div class="cart-item">
             <div class="cart-item-left">
-                <input type="checkbox" class="product-checkbox" value="{{ $cart->id }}" name="cart_checkbox" data-price="{{ $cart->product->price * $cart->quantity }}">
+                <input type="checkbox" class="product-checkbox" value="{{ $cart->id }}" name="cart_checkbox"
+                    data-price="{{ $cart->product->price * $cart->quantity }}">
                 <img src="{{ asset('storage/' . $cart->product->image) }}" alt="{{ $cart->product->name }}">
                 <div>
                     <h3>{{ $cart->product->name }}</h3>
@@ -195,12 +196,7 @@
             </div>
             <div>
                 <span>Total: Rp<span id="totalPrice">0</span></span>
-                <form action="{{ route('order.checkout') }}" method="POST" style="display:inline;">
-                    @csrf
-                    {{-- Kirim semua cart_id yang dicentang --}}
-                    <input type="hidden" name="cart_ids" id="checkoutCartIds">
-                    <button type="submit" class="checkout-btn">Checkout (<span id="selectedCount"> 0</span>)</button>
-                </form>
+                <a href="{{ route('checkout') }}" class="checkout-btn">Checkout (<span id="selectedCount"> 0</span>)</a>
             </div>
         </div>
     @endif
@@ -220,87 +216,86 @@
 @endif
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const checkAll = document.getElementById('checkAll');
-    const productCheckboxes = document.querySelectorAll('.product-checkbox');
-    const totalPriceElem = document.getElementById('totalPrice');
-    const selectedCountElem = document.getElementById('selectedCount');
-    const checkoutCartIdsInput = document.getElementById('checkoutCartIds');
-    const removeSelectedForm = document.getElementById('removeSelectedForm');
-    const checkoutBtn = document.querySelector('.checkout-btn');
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkAll = document.getElementById('checkAll');
+        const productCheckboxes = document.querySelectorAll('.product-checkbox');
+        const totalPriceElem = document.getElementById('totalPrice');
+        const selectedCountElem = document.getElementById('selectedCount');
+        const checkoutCartIdsInput = document.getElementById('checkoutCartIds');
+        const removeSelectedForm = document.getElementById('removeSelectedForm');
+        const checkoutBtn = document.querySelector('.checkout-btn');
 
-    function getSelectedCheckboxes() {
-        return [...document.querySelectorAll('.product-checkbox:checked')];
-    }
-
-    function updateCartSummary() {
-        const selected = getSelectedCheckboxes();
-        let total = 0;
-        let selectedIds = [];
-
-        selected.forEach(cb => {
-            total += parseInt(cb.dataset.price);
-            selectedIds.push(cb.value);
-        });
-
-        // Format total
-        const formatted = new Intl.NumberFormat('id-ID', {
-            style: 'currency',
-            currency: 'IDR',
-            minimumFractionDigits: 0
-        }).format(total);
-
-        totalPriceElem.textContent = formatted.replace('Rp', '').trim();
-        selectedCountElem.textContent = selected.length;
-        checkoutCartIdsInput.value = selectedIds.join(',');
-    }
-
-    // Checkbox event
-    productCheckboxes.forEach(cb => {
-        cb.addEventListener('change', updateCartSummary);
-    });
-
-    // Select All checkbox
-    checkAll?.addEventListener('change', function () {
-        productCheckboxes.forEach(cb => cb.checked = this.checked);
-        updateCartSummary();
-    });
-
-    // Form Hapus
-    removeSelectedForm?.addEventListener('submit', function (e) {
-        const selected = getSelectedCheckboxes();
-
-        if (selected.length === 0) {
-            e.preventDefault();
-            alert('Pilih setidaknya satu produk untuk dihapus.');
-            return;
+        function getSelectedCheckboxes() {
+            return [...document.querySelectorAll('.product-checkbox:checked')];
         }
 
-        // Hapus input hidden lama
-        this.querySelectorAll('input[name="cart_ids[]"]').forEach(el => el.remove());
+        function updateCartSummary() {
+            const selected = getSelectedCheckboxes();
+            let total = 0;
+            let selectedIds = [];
 
-        // Tambah input hidden baru
-        selected.forEach(cb => {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'cart_ids[]';
-            input.value = cb.value;
-            this.appendChild(input);
-        });
-    });
+            selected.forEach(cb => {
+                total += parseInt(cb.dataset.price);
+                selectedIds.push(cb.value);
+            });
 
-    // Tombol Checkout
-    checkoutBtn?.addEventListener('click', function (e) {
-        const selected = getSelectedCheckboxes();
-        if (selected.length === 0) {
-            e.preventDefault();
-            alert('Pilih setidaknya satu produk untuk checkout.');
-            return;
+            // Format total
+            const formatted = new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(total);
+
+            totalPriceElem.textContent = formatted.replace('Rp', '').trim();
+            selectedCountElem.textContent = selected.length;
+            checkoutCartIdsInput.value = selectedIds.join(',');
         }
-        // hidden input sudah diisi di updateCartSummary()
-    });
 
-    updateCartSummary(); // Inisialisasi saat load
-});
+        // Checkbox event
+        productCheckboxes.forEach(cb => {
+            cb.addEventListener('change', updateCartSummary);
+        });
+
+        // Select All checkbox
+        checkAll?.addEventListener('change', function () {
+            productCheckboxes.forEach(cb => cb.checked = this.checked);
+            updateCartSummary();
+        });
+
+        // Form Hapus
+        removeSelectedForm?.addEventListener('submit', function (e) {
+            const selected = getSelectedCheckboxes();
+
+            if (selected.length === 0) {
+                e.preventDefault();
+                alert('Pilih setidaknya satu produk untuk dihapus.');
+                return;
+            }
+
+            // Hapus input hidden lama
+            this.querySelectorAll('input[name="cart_ids[]"]').forEach(el => el.remove());
+
+            // Tambah input hidden baru
+            selected.forEach(cb => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'cart_ids[]';
+                input.value = cb.value;
+                this.appendChild(input);
+            });
+        });
+
+        // Tombol Checkout
+        checkoutBtn?.addEventListener('click', function (e) {
+            const selected = getSelectedCheckboxes();
+            if (selected.length === 0) {
+                e.preventDefault();
+                alert('Pilih setidaknya satu produk untuk checkout.');
+                return;
+            }
+            // hidden input sudah diisi di updateCartSummary()
+        });
+
+        updateCartSummary(); // Inisialisasi saat load
+    });
 </script>
-

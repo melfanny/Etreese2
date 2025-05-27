@@ -127,5 +127,9 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('addresses/{address}', [AddressController::class, 'destroy'])->name('addresses.destroy');
 });
 
+Route::middleware('auth')->group(function () {
+    Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout'); // display checkout page
+    Route::post('/checkout', [OrderController::class, 'checkout'])->name('order.checkout'); // handle checkout submission
+});
 
 require __DIR__ . '/auth.php';

@@ -15,11 +15,16 @@ class OrderController extends Controller
         if (empty($request->cart_ids)) {
             return back()->with('error', 'Pilih setidaknya satu produk untuk checkout.');
         }
-        $cartIds = explode(',', $request->cart_ids);
+
+        $cartIds = $request->cart_ids;
+        if (!is_array($cartIds)) {
+            $cartIds = explode(',', $cartIds);
+        }
+
         if (empty($cartIds) || $cartIds[0] === '') {
             return back()->with('error', 'Pilih setidaknya satu produk untuk checkout.');
         }
-        $cartIds = explode(',', $request->cart_ids);
+
         $carts = \App\Models\Cart::whereIn('id', $cartIds)->with('product')->get();
 
         // Contoh: hanya satu produk, jika multi-produk silakan buat order_items
@@ -29,9 +34,9 @@ class OrderController extends Controller
             'product_id' => $cart->product_id,
             'total' => $cart->product->price * $cart->quantity,
             'status' => 'waiting_payment',
+            'shipping_method' => $request->shipping_method[$cart->id] ?? null,
+            'payment_method' => $request->payment_method[$cart->id] ?? null,
         ]);
-
-        // Hapus cart yang sudah di-checkout
         \App\Models\Cart::whereIn('id', $cartIds)->delete();
 
         return redirect()->route('order.payment', $order);
