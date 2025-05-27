@@ -6,7 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    protected $fillable = ['name', 'deskripsi', 'image', 'price'];
+    protected $fillable = ['name', 'deskripsi', 'image', 'price', 'stock_limit'];
+
+    protected $attributes = [
+        'stock_limit' => 10 // Default stock limit
+    ];
 
     public function colors()
     {
@@ -21,5 +25,15 @@ class Product extends Model
     public function stocks()
     {
         return $this->hasMany(Stock::class);
+    }
+
+    public function isLowStock($colorId, $sizeId)
+    {
+        $stock = $this->stocks()
+            ->where('color_id', $colorId)
+            ->where('size_id', $sizeId)
+            ->first();
+            
+        return $stock ? $stock->quantity <= $this->stock_limit : true;
     }
 }

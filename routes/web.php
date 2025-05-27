@@ -74,6 +74,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit'); // form edit produk
     Route::put('products/{product}', [ProductController::class, 'update'])->name('products.update');//update produk
     Route::delete('products/{id}', [ProductController::class, 'destroy'])->name('products.destroy'); // hapus produk
+    Route::get('stock', [App\Http\Controllers\Admin\StockController::class, 'index'])->name('stock');
+    Route::put('stock-limit/{productId}/{colorId}/{sizeId}', [App\Http\Controllers\Admin\StockController::class, 'updateStockLimit'])->name('update.stock.limit');
 });
 
 Route::get('/products/{id}', [UserProductController::class, 'show'])->name('product.productdetails'); // menampilkan produk detal
