@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\Product;
+use App\Models\Address;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -105,6 +106,14 @@ class CartController extends Controller
     public function checkout()
     {
         $carts = Cart::with('product', 'color', 'size')->where('user_id', Auth::id())->get();
-        return view('checkout', compact('carts'));
+        $address = Address::where('user_id', Auth::id())->first();
+
+        $totalWeight = 0;
+            foreach ($carts as $cart) {
+                $weightPerProduct = $cart->product->weight ?? 1000; // default 1000 gram jika belum ada berat
+                $totalWeight += $weightPerProduct * $cart->quantity;
+            }
+
+                return view('checkout', compact('carts', 'address', 'totalWeight'));
     }
 }

@@ -6,7 +6,7 @@
         background-color: #E6B597;
         padding: 20px;
         border-radius: 8px;
-        max-width: 800px;
+        max-width: 100%;
         margin: 20px auto;
         gap: 20px;
     }
@@ -92,6 +92,9 @@
                         <p class="checkout-info">Color : {{ $cart->color->name ?? 'N/A' }}</p>
                         <p class="checkout-info">Qty : {{ $cart->quantity }}</p>
                         <p class="checkout-info">Price : {{ number_format($cart->product->price, 0, ',', '.') }}</p>
+                        <p class="checkout-info">Address: {{ $address->recipient_name }} - Telp: {{ $address->phone }} -
+                                {{ $address->address }}, {{ $address->city }}, {{ $address->province }} ({{ $address->postal_code }}),</p>
+        <input type="hidden" name="address_id" value="{{ $address->id }}">
                         <div class="checkout-info">
                             <label for="shipping_method_{{ $cart->id }}">Ship method:</label>
                             <select name="shipping_method[{{ $cart->id }}]" id="shipping_method_{{ $cart->id }}">
@@ -99,6 +102,12 @@
                                 <option value="jnt">J&T</option>
                                 <option value="sicepat">SiCepat</option>
                             </select>
+
+                        <p>Ongkir:</p>
+                        <select id="shipping_cost" name="shipping_cost">
+                            <option value="">-- Pilih Ongkir --</option>
+                        </select>
+
                         </div>
                         <div class="checkout-info">
                             <label for="payment_method_{{ $cart->id }}">Payment method:</label>
@@ -116,3 +125,5 @@
 @else
     <p>No items in the cart to checkout.</p>
 @endif
+
+

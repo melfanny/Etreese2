@@ -1,6 +1,7 @@
 <?php
 // app/Models/Order.php
 namespace App\Models;
+use App\Models\OrderItem;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,4 +17,5 @@ class Order extends Model
     {
         return $this->belongsTo(User::class);
     }
+    
 }

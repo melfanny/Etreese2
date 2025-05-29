@@ -46,6 +46,7 @@
     }
 
     .nav-link {
+        position: relative;
         font-weight: bold;
         color: #884F22;
         text-decoration: none;
@@ -58,6 +59,11 @@
         background-color: #F2D8A7;
     }
 
+
+    .nav-link.position-relative.d-inline-block {
+    padding: 5px;
+}
+
     .icons {
         font-size: 20px;
         color: #000;
@@ -69,6 +75,25 @@
         align-items: center;
         gap: 16px;
     }
+
+    .nav-link i.fas.fa-bell {
+        display: block;
+    }
+
+    .notif-badge-counter {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        background-color: #884F22;
+        color: white;
+        border-radius: 50%;
+        padding: 3px 7px;
+        font-size: 12px;
+        font-weight: bold;
+        line-height: 1;
+        user-select: none;
+    }
+
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -87,7 +112,19 @@
         <a href="{{ route('cart.index') }}" class="nav-link {{ request()->routeIs('cart.index') ? 'active' : '' }}">CART</a>
         <a href="{{ route('aboutus') }}" class="nav-link {{ request()->routeIs('aboutus') ? 'active' : '' }}">ABOUT
             US</a>
-        <a href="{{ route('notifications.index') }}"><i class="fas fa-bell icons"></i></a>
+        @php
+    $unreadCount = \App\Models\Notification::where('user_id', auth()->id())
+        ->where('is_read', false)
+        ->count();
+@endphp
+
+    <a href="{{ route('notifications.index') }}" class="nav-link">
+        <i class="fas fa-bell"></i>
+        @if($unreadCount > 0)
+            <span class="notif-badge-counter">{{ $unreadCount }}</span>
+        @endif
+    </a>
+
 
         @auth
             <div class="icon-wrapper">
@@ -112,6 +149,9 @@
                         </x-dropdown-link>
                         <x-dropdown-link :href="route('addresses.index')">
                             {{ __('Address') }} 
+                        </x-dropdown-link>
+                        <x-dropdown-link :href="route('order.myorders')">
+                            {{ __('Order Status') }} 
                         </x-dropdown-link>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf

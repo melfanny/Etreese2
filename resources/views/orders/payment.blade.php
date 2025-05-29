@@ -1,4 +1,4 @@
-@extends('layouts.app_admin')
+@extends('layouts.app_order_users')
 @section('content')
     <div class="container">
         <h2>Pembayaran Order #{{ $order->id }}</h2>

@@ -52,6 +52,8 @@
         padding: 8px 12px;
         border-radius: 8px;
         transition: background-color 0.2s ease;
+        position: relative;
+        padding-right: 24px; 
     }
 
     .nav-link.active {
@@ -69,13 +71,43 @@
         align-items: center;
         gap: 16px;
     }
+
+    .badge-counter {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(50%, -50%);
+    background-color: #884F22;
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 50px;
+    min-width: 20px;
+    text-align: center;
+    line-height: 1;
+    pointer-events: none;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+    }   
+
+    .position-relative {
+        position: relative;
+    }
+
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <div class="top-bar">
     <a href="{{ route('admin.orders') }}"
-        class="nav-link {{ request()->routeIs('admin.orders') ? 'active' : '' }}">ORDERS</a>
+        class="nav-link position-relative {{ request()->routeIs('admin.orders') ? 'active' : '' }}">ORDERS
+        @if(isset($newPaidOrdersCount) && $newPaidOrdersCount > 0)
+        <span class="badge-counter">
+            {{ $newPaidOrdersCount }}
+            <span class="visually-hidden"></span>
+        </span>
+    @endif
+    </a>
 
     <a href="{{ route('admin.products.products_admin') }}"
         class="nav-link {{ request()->routeIs('admin.products.products_admin') ? 'active' : '' }}">PRODUCTS</a>

@@ -143,23 +143,23 @@
         }
 
         .order-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 22px;
-            margin-top: 18px;
+            display: flex;
+            flex-direction: column; /* Stack ke bawah */
+            gap: 20px; /* Jarak antar order */
+            padding: 20px;
+            max-width: 900px;
+            margin: 0 auto; /* Tengah */
         }
 
         .order-card {
-            background: linear-gradient(120deg, #fff7f0 60%, #f3e5d7 100%);
-            border-radius: 18px;
-            box-shadow: 0 4px 18px rgba(136, 79, 34, 0.10), 0 1.5px 4px #e5c7b0;
-            padding: 26px 22px 20px 22px;
             display: flex;
-            gap: 18px;
+            background-color: #E2E2E2;
+            padding: 20px;
+            border-radius: 10px;
             align-items: flex-start;
-            position: relative;
-            transition: box-shadow 0.18s, transform 0.18s;
-            border: 1.5px solid #e5c7b0;
+            gap: 20px;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .order-card:hover {
@@ -169,28 +169,20 @@
         }
 
         .product-thumb {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 16px;
-            border: 2px solid #e5c7b0;
-            background: #f3e5d7;
-            box-shadow: 0 2px 8px #f3e5d7;
+           width: 150px;
+    height: auto;
+    border-radius: 10px;
+    background-color: white;
+    padding: 10px;
         }
 
         .order-info {
             flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+    font-family: 'Poppins', sans-serif;
         }
 
         .order-info h2 {
-            font-size: 1.15rem;
-            color: #884F22;
-            margin-bottom: 8px;
-            font-weight: bold;
-            letter-spacing: 0.5px;
+            margin-top: 0;
         }
 
         .order-info p {
@@ -201,16 +193,12 @@
         }
 
         .order-status {
-            display: inline-block;
-            padding: 5px 16px;
-            border-radius: 10px;
-            font-size: 0.98rem;
-            font-weight: 600;
-            margin-top: 10px;
-            background: #f3e5d7;
-            color: #884F22;
-            letter-spacing: 0.5px;
-            box-shadow: 0 1px 4px #e5c7b0;
+           display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-top: 10px;
         }
 
         .status-waiting_payment {
@@ -219,39 +207,35 @@
         }
 
         .status-paid {
-            background: #fff0c2;
-            color: #b36b2c;
+            background-color: #ffc107;
+    color: #000;
         }
 
         .status-processed {
-            background: #b6e6c3;
-            color: #1b7f3a;
+            background-color: #0d6efd;
+    color: white;
         }
 
         .status-shipped {
-            background: #b3d8f7;
-            color: #1a5e8a;
+       background-color: #20c997;
+    color: white;
         }
 
         .status-completed {
-            background: #e2e2e2;
-            color: #555;
+          background-color: #6c757d;
+    color: white;
         }
 
         .order-actions {
-            margin-top: 16px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
+          margin-top: 15px;
         }
 
         .order-actions .btn {
-            border-radius: 7px;
-            font-size: 0.97rem;
-            font-weight: 600;
-            padding: 6px 16px;
-            border: none;
-            transition: background 0.15s, color 0.15s;
+              padding: 6px 12px;
+    font-size: 0.85rem;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
         }
 
         .order-actions .btn-warning {

@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Notification;
 
 class AdminOrderController extends Controller
 {
-    // Fungsi cek manual admin
+    // Fungsi cek manual role admin
     private function isAdmin()
     {
         return Auth::check() && Auth::user()->role === 'admins';
@@ -20,7 +21,7 @@ class AdminOrderController extends Controller
             abort(403, 'Akses ditolak. Halaman ini hanya untuk admin.');
         }
 
-        // Statistik dari semua order (TIDAK TERPENGARUH FILTER)
+        // status dari semua order (TIDAK TERPENGARUH FILTER)
         $totalOrders = Order::count();
         $waitingPayment = Order::where('status', 'waiting_payment')->count();
         $paid = Order::where('status', 'paid')->count();
@@ -28,7 +29,7 @@ class AdminOrderController extends Controller
         $shipped = Order::where('status', 'shipped')->count();
         $completed = Order::where('status', 'completed')->count();
 
-        // Query untuk tampilan (boleh difilter)
+        // query untuk tampilan status order (terpengaruh filter)
         $query = Order::with(['user', 'product'])->latest();
 
         if ($request->filled('status')) {
@@ -51,6 +52,9 @@ class AdminOrderController extends Controller
 
         $orders = $query->get();
 
+        // untuk menampilkan badge counter ketika ada order yg masuk sebagai notifikasi
+        $newPaidOrdersCount = Order::where('status', 'paid')->count();
+
         return view('admin.orders', compact(
             'orders',
             'totalOrders',
@@ -58,7 +62,8 @@ class AdminOrderController extends Controller
             'paid',
             'processed',
             'shipped',
-            'completed'
+            'completed',
+            'newPaidOrdersCount'
         ));
     }
 
@@ -71,6 +76,14 @@ class AdminOrderController extends Controller
             return back()->with('error', 'Order belum dibayar!');
         }
         $order->update(['status' => 'processed']);
+
+
+        // Kirim notifikasi pesanan diproses ke pelanggan
+        Notification::create([
+            'user_id' => $order->user_id,
+            'message' => 'Pesanan Anda sedang diproses dan dikemas.'
+        ]);
+        
         return back()->with('success', 'Order diproses (packing)!');
     }
 
@@ -83,6 +96,13 @@ class AdminOrderController extends Controller
             return back()->with('error', 'Order belum diproses!');
         }
         $order->update(['status' => 'shipped']);
+
+        // Kirim notifikasi pesanan sudah dikirim ke pelanggan
+        Notification::create([
+            'user_id' => $order->user_id,
+            'message' => 'Pesanan Anda telah dikirim. Harap menunggu kedatangan paket Anda.'
+        ]);
+
         return back()->with('success', 'Order dikirim!');
     }
 }
