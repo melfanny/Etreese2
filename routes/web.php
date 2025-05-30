@@ -12,17 +12,16 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\ContactController;
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 use App\Models\Home;
 
 use App\Models\Product;
 
-Route::get('/Home', function () {
+Route::get('/', function () {
     $home = Home::first();
     $products = Product::select(['id', 'name', 'image', 'price'])->get();
     return view('home', compact('home', 'products'));
@@ -40,8 +39,6 @@ Route::get('/Products', [UserProductController::class, 'index'])->name('products
 Route::get('/AboutUs', function () {
     return view('aboutus');
 })->name('aboutus');
-
-
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 Route::get('/admin/dashboard', [DashboardController::class, 'adminDashboard'])->middleware(['auth', 'verified'])->name('admin.dashboard');
@@ -65,6 +62,10 @@ Route::prefix('admin')->group(function () {
     Route::get('products', [AdminController::class, 'products_admin'])->name('admin.products.products_admin');
     Route::get('add_new', [ProductController::class, 'create'])->name('admin.products.create');
 });
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('message', [App\Http\Controllers\MessageController::class, 'index'])->name('message');
+});
 #Route::get('/products/create', [ProductController::class, 'create'])->name('admin.products.create');
 
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -76,6 +77,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::delete('products/{id}', [ProductController::class, 'destroy'])->name('products.destroy'); // hapus produk
     Route::get('stock', [App\Http\Controllers\Admin\StockController::class, 'index'])->name('stock');
     Route::put('stock-limit/{productId}/{colorId}/{sizeId}', [App\Http\Controllers\Admin\StockController::class, 'updateStockLimit'])->name('update.stock.limit');
+
+    Route::get('message', [App\Http\Controllers\MessageController::class, 'index'])->name('admin.messages');
 });
 
 Route::get('/products/{id}', [UserProductController::class, 'show'])->name('product.productdetails'); // menampilkan produk detal

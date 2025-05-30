@@ -53,7 +53,7 @@
         border-radius: 8px;
         transition: background-color 0.2s ease;
         position: relative;
-        padding-right: 24px; 
+        padding-right: 24px;
     }
 
     .nav-link.active {
@@ -73,27 +73,26 @@
     }
 
     .badge-counter {
-    position: absolute;
-    top: 0;
-    right: 0;
-    transform: translate(50%, -50%);
-    background-color: #884F22;
-    color: #fff;
-    font-size: 12px;
-    font-weight: bold;
-    padding: 2px 6px;
-    border-radius: 50px;
-    min-width: 20px;
-    text-align: center;
-    line-height: 1;
-    pointer-events: none;
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
-    }   
+        position: absolute;
+        top: 0;
+        right: 0;
+        transform: translate(50%, -50%);
+        background-color: #884F22;
+        color: #fff;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 2px 6px;
+        border-radius: 50px;
+        min-width: 20px;
+        text-align: center;
+        line-height: 1;
+        pointer-events: none;
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+    }
 
     .position-relative {
         position: relative;
     }
-
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -102,11 +101,11 @@
     <a href="{{ route('admin.orders') }}"
         class="nav-link position-relative {{ request()->routeIs('admin.orders') ? 'active' : '' }}">ORDERS
         @if(isset($newPaidOrdersCount) && $newPaidOrdersCount > 0)
-        <span class="badge-counter">
-            {{ $newPaidOrdersCount }}
-            <span class="visually-hidden"></span>
-        </span>
-    @endif
+            <span class="badge-counter">
+                {{ $newPaidOrdersCount }}
+                <span class="visually-hidden"></span>
+            </span>
+        @endif
     </a>
 
     <a href="{{ route('admin.products.products_admin') }}"
@@ -123,6 +122,11 @@
 
         @auth
             <div class="icon-wrapper">
+                @php
+                    $unreadCount = \App\Models\Message::where('user_id', auth()->id())
+                        ->where('is_read', false)
+                        ->count();
+                @endphp
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button
@@ -139,11 +143,16 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
+                        @php
+                            $messages = \App\Models\Message::where('user_id', auth()->id())
+                                ->where('is_read', false)
+                                ->get();
+                        @endphp
                         <x-dropdown-link :href="route('admin.home')"> {{ __('Edit Home') }}
                         </x-dropdown-link>
+                        <x-dropdown-link :href="url('/admin/message')"> {{ __('Messages') }}
+                        </x-dropdown-link>
+
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <x-dropdown-link :href="route('logout')"

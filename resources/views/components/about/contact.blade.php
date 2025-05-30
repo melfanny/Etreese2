@@ -62,11 +62,25 @@
             Let’s connect! Drop us a message, and we’ll get back to you as soon as possible.
         </p>
 
-        <form class="about-contact-form" method="POST" action="#">
-            @csrf
-            <textarea class="about-contact-textarea" placeholder="Type your message here...." name="message"
-                rows="4"></textarea>
-            <button type="submit" class="about-contact-button">SEND</button>
-        </form>
+        @auth
+            @if(session('success'))
+                <div style="color: lime; margin-bottom: 40px;">
+                    {{ session('success') }}
+                </div>
+            @endif
+            @if($errors->any())
+                <div style="color: red; margin-bottom: 10px;">
+                    {{ $errors->first() }}
+                </div>
+            @endif
+            <form class="about-contact-form" method="POST" action="{{ route('contact.store') }}">
+                @csrf
+                <textarea class="about-contact-textarea" placeholder="Type your message here...." name="message"
+                    rows="4"></textarea>
+                <button type="submit" class="about-contact-button">SEND</button>
+            </form>
+        @else
+            <p>Please <a href="{{ route('login') }}">login</a> to send a message.</p>
+        @endauth
     </div>
 </body>
