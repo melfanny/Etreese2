@@ -64,7 +64,7 @@ Route::prefix('admin')->group(function () {
 });
 
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::get('message', [App\Http\Controllers\MessageController::class, 'index'])->name('message');
+    Route::get('message', [App\Http\Controllers\MessageController::class, 'index'])->name('admin.message');
 });
 #Route::get('/products/create', [ProductController::class, 'create'])->name('admin.products.create');
 

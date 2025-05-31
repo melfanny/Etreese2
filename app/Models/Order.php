@@ -7,7 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-    protected $fillable = ['user_id', 'product_id', 'total', 'status', 'shipping_method', 'payment_method'];
+    protected $fillable = ['user_id', 'product_id', 'total', 'status', 'shipping_method', 'payment_method', 'checkout_data'];
+
+    protected $casts = [
+        'checkout_data' => 'array',
+    ];
 
     public function product()
     {
@@ -17,5 +21,5 @@ class Order extends Model
     {
         return $this->belongsTo(User::class);
     }
-    
+
 }

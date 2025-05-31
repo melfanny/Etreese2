@@ -1,14 +1,37 @@
 <style>
+    .checkout-body {
+        background-color: #d2997a;
+        width: 100%;
+        min-height: 100%;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .checkout-container {
+        max-width: 900px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    .checkout-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
     .checkout-card {
-        position: relative;
         display: flex;
         align-items: center;
-        background-color: #E6B597;
+        background-color: #FFFBEF;
         padding: 20px;
         border-radius: 8px;
-        max-width: 100%;
-        margin: 20px auto;
+        margin-bottom: 16px;
         gap: 20px;
+        position: relative;
     }
 
     .checkout-image {
@@ -35,39 +58,63 @@
     .checkout-info {
         margin: 6px 0;
         font-size: 14px;
-        color: #444;
     }
 
     .checkout-info select {
         border-radius: 12px;
-        width: 80px;
-        padding: 4px 12px;
+        width: 100px;
+        padding: 4px 8px;
         font-size: 12px;
         height: 28px;
         border: 1px solid #ccc;
         background-color: #fff;
         appearance: none;
-        -webkit-appearance: none;
-        -moz-appearance: none;
         cursor: pointer;
     }
 
-    .proceed-payment-btn {
-        position: absolute;
-        bottom: 20px;
-        right: 20px;
+    .checkout-summary {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         background-color: #fbe7d0;
+        padding: 20px;
+        border-radius: 8px;
+        margin-top: 10px;
+    }
+
+    .summary-row {
+        margin-bottom: 12px;
+        font-size: 16px;
+    }
+
+    .summary-total {
+        font-size: 20px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 0;
+    }
+
+    .summary-select {
+        padding: 6px 12px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        width: 150px;
+        appearance: none;
+        cursor: pointer;
+        background-color: #fff;
+    }
+
+    .proceed-payment-btn {
+        background-color: #E6B597;
         color: #333;
         border: none;
-        padding: 10px 16px;
+        padding: 10px 20px;
         border-radius: 8px;
         font-weight: bold;
         font-family: 'Arial', sans-serif;
         cursor: pointer;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         transition: background-color 0.3s ease;
-        text-decoration: none;
-        white-space: nowrap;
     }
 
     .proceed-payment-btn:hover {
@@ -77,53 +124,58 @@
 </style>
 
 @if(isset($carts) && $carts->count() > 0)
+    @php $totalPrice = 0; @endphp
     <form method="POST" action="{{ route('order.checkout') }}">
         @csrf
-        @foreach($carts as $cart)
-            @if($cart->product)
-                <div class="checkout-card">
-                    <input type="checkbox" name="cart_ids[]" value="{{ $cart->id }}" id="cart_{{ $cart->id }}" checked hidden>
-                    <img src="{{ asset('storage/' . $cart->product->image) }}" alt="{{ $cart->product->name }}"
-                        class="checkout-image" />
-                    <div class="checkout-details">
-                        <h3 class="checkout-title">{{ $cart->product->name }}</h3>
-                        <p class="checkout-info">Order id: {{ $cart->id }}</p>
-                        <p class="checkout-info">Size : {{ $cart->size->name ?? 'N/A' }}</p>
-                        <p class="checkout-info">Color : {{ $cart->color->name ?? 'N/A' }}</p>
-                        <p class="checkout-info">Qty : {{ $cart->quantity }}</p>
-                        <p class="checkout-info">Price : {{ number_format($cart->product->price, 0, ',', '.') }}</p>
-                        <p class="checkout-info">Address: {{ $address->recipient_name }} - Telp: {{ $address->phone }} -
-                                {{ $address->address }}, {{ $address->city }}, {{ $address->province }} ({{ $address->postal_code }}),</p>
-        <input type="hidden" name="address_id" value="{{ $address->id }}">
-                        <div class="checkout-info">
-                            <label for="shipping_method_{{ $cart->id }}">Ship method:</label>
-                            <select name="shipping_method[{{ $cart->id }}]" id="shipping_method_{{ $cart->id }}">
-                                <option value="jne">JNE</option>
-                                <option value="jnt">J&T</option>
-                                <option value="sicepat">SiCepat</option>
-                            </select>
+        <div class="checkout-body">
+            <div class="checkout-container">
+                @foreach($carts as $cart)
+                    @if($cart->product)
+                        @php
+                            $subtotal = $cart->product->price * $cart->quantity;
+                            $totalPrice += $subtotal;
+                        @endphp
+                        <input type="hidden" name="cart_ids[]" value="{{ $cart->id }}">
+                        <div class="checkout-card">
+                            <img src="{{ asset('storage/' . $cart->product->image) }}" alt="{{ $cart->product->name }}"
+                                class="checkout-image" />
+                            <div class="checkout-details">
+                                <h3 class="checkout-title">{{ $cart->product->name }}</h3>
+                                <p class="checkout-info">Size: {{ $cart->size->name ?? 'N/A' }}</p>
+                                <p class="checkout-info">Color: {{ $cart->color->name ?? 'N/A' }}</p>
+                                <p class="checkout-info">Qty: {{ $cart->quantity }}</p>
+                                <p class="checkout-info">Price: Rp {{ number_format($cart->product->price, 0, ',', '.') }}</p>
 
-                        <p>Ongkir:</p>
-                        <select id="shipping_cost" name="shipping_cost">
-                            <option value="">-- Pilih Ongkir --</option>
-                        </select>
+                                <input type="hidden" name="address_id" value="{{ $address->id }}">
 
+                            </div>
                         </div>
-                        <div class="checkout-info">
-                            <label for="payment_method_{{ $cart->id }}">Payment method:</label>
-                            <select name="payment_method[{{ $cart->id }}]" id="payment_method_{{ $cart->id }}">
-                                <option value="bca">BCA</option>
-                                <option value="mandiri">Mandiri</option>
-                            </select>
-                        </div>
-                    </div>
+                    @endif
+                @endforeach
+
+                <div class="summary-row">
+                    <label for="shipping_method">Shipping Method:</label><br>
+                    <select name="shipping_method" id="shipping_method" class="summary-select">
+                        <option value="jne">JNE</option>
+                        <option value="jnt">J&T</option>
+                        <option value="sicepat">SiCepat</option>
+                    </select>
+                </div>
+
+                <div class="summary-row">
+                    <label for="payment_method">Payment Method:</label><br>
+                    <select name="payment_method" id="payment_method" class="summary-select">
+                        <option value="bca">BCA</option>
+                        <option value="mandiri">Mandiri</option>
+                    </select>
+                </div>
+                <div class="checkout-summary">
+                    <div class="summary-total">Total: Rp {{ number_format($totalPrice, 0, ',', '.') }}</div>
                     <button type="submit" class="proceed-payment-btn">Proceed to Payment</button>
                 </div>
-            @endif
-        @endforeach
+            </div>
+        </div>
     </form>
 @else
     <p>No items in the cart to checkout.</p>
 @endif
-
-
