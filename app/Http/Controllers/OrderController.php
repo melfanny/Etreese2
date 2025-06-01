@@ -5,6 +5,10 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use App\Models\Color;
+use App\Models\Size;
+use App\Models\Stock;
 
 class OrderController extends Controller
 {
@@ -110,8 +114,46 @@ class OrderController extends Controller
             abort(403);
         if ($order->status !== 'shipped')
             abort(403);
-        $order->update(['status' => 'completed']);
-        return back()->with('success', 'Pesanan selesai!');
+
+        // Start transaction to ensure data consistency
+        DB::beginTransaction();
+        try {
+            // Update order status
+            $order->update(['status' => 'completed']);
+
+            // Reduce stock for each item in the order
+            foreach ($order->checkout_data as $item) {
+                $product = Product::findOrFail($item['product_id']);
+                
+                // Find the color and size IDs
+                $color = Color::where('product_id', $product->id)
+                    ->where('name', $item['color'])
+                    ->first();
+                $size = Size::where('product_id', $product->id)
+                    ->where('name', $item['size'])
+                    ->first();
+
+                if ($color && $size) {
+                    // Find and update the stock
+                    $stock = Stock::where('product_id', $product->id)
+                        ->where('color_id', $color->id)
+                        ->where('size_id', $size->id)
+                        ->first();
+
+                    if ($stock) {
+                        // Ensure we don't go below 0
+                        $newQuantity = max(0, $stock->quantity - $item['quantity']);
+                        $stock->update(['quantity' => $newQuantity]);
+                    }
+                }
+            }
+
+            DB::commit();
+            return back()->with('success', 'Pesanan selesai!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Terjadi kesalahan saat menyelesaikan pesanan: ' . $e->getMessage());
+        }
     }
 
 }
