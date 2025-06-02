@@ -61,8 +61,8 @@
 
 
     .nav-link.position-relative.d-inline-block {
-    padding: 5px;
-}
+        padding: 5px;
+    }
 
     .icons {
         font-size: 20px;
@@ -94,6 +94,87 @@
         user-select: none;
     }
 
+    /* Responsive styles */
+    @media (max-width: 1024px) {
+        .top-bar {
+            padding-left: 10%;
+            padding-right: 10%;
+            height: 120px;
+        }
+
+        .nav-left,
+        .nav-right {
+            gap: 20px;
+            font-size: 16px;
+        }
+
+        .nav-center img {
+            height: 80px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .top-bar {
+            flex-wrap: wrap;
+            height: auto;
+            padding-left: 5%;
+            padding-right: 5%;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .nav-left,
+        .nav-right {
+            width: 100%;
+            justify-content: center;
+            gap: 15px;
+            font-size: 14px;
+            order: 2;
+        }
+
+        .nav-center {
+            width: 100%;
+            order: 1;
+            margin-bottom: 10px;
+        }
+
+        .nav-center img {
+            height: 70px;
+        }
+
+        .nav-link {
+            padding: 6px 10px;
+            font-size: 14px;
+        }
+
+        .icon-wrapper {
+            gap: 10px;
+        }
+
+        .badge-counter {
+            font-size: 10px;
+            min-width: 16px;
+            padding: 1px 4px;
+        }
+    }
+
+    @media (max-width: 480px) {
+
+        .nav-left,
+        .nav-right {
+            gap: 10px;
+            font-size: 12px;
+        }
+
+        .nav-link {
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+
+        .nav-center img {
+            height: 60px;
+        }
+    }
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -109,21 +190,22 @@
         <img src="{{ asset('images/logo.png') }}" alt="Etreese Logo">
     </div>
     <div class="nav-right">
-        <a href="{{ route('cart.index') }}" class="nav-link {{ request()->routeIs('cart.index') ? 'active' : '' }}">CART</a>
+        <a href="{{ route('cart.index') }}"
+            class="nav-link {{ request()->routeIs('cart.index') ? 'active' : '' }}">CART</a>
         <a href="{{ route('aboutus') }}" class="nav-link {{ request()->routeIs('aboutus') ? 'active' : '' }}">ABOUT
             US</a>
         @php
-    $unreadCount = \App\Models\Notification::where('user_id', auth()->id())
-        ->where('is_read', false)
-        ->count();
-@endphp
+            $unreadCount = \App\Models\Notification::where('user_id', auth()->id())
+                ->where('is_read', false)
+                ->count();
+        @endphp
 
-    <a href="{{ route('notifications.index') }}" class="nav-link">
-        <i class="fas fa-bell"></i>
-        @if($unreadCount > 0)
-            <span class="notif-badge-counter">{{ $unreadCount }}</span>
-        @endif
-    </a>
+        <a href="{{ route('notifications.index') }}" class="nav-link">
+            <i class="fas fa-bell"></i>
+            @if($unreadCount > 0)
+                <span class="notif-badge-counter">{{ $unreadCount }}</span>
+            @endif
+        </a>
 
 
         @auth
@@ -148,10 +230,10 @@
                             {{ __('Profile') }}
                         </x-dropdown-link>
                         <x-dropdown-link :href="route('addresses.index')">
-                            {{ __('Address') }} 
+                            {{ __('Address') }}
                         </x-dropdown-link>
                         <x-dropdown-link :href="route('order.myorders')">
-                            {{ __('Order Status') }} 
+                            {{ __('Order Status') }}
                         </x-dropdown-link>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
@@ -161,7 +243,7 @@
                             </x-dropdown-link>
                         </form>
                     </x-slot>
-                    </x-dropdown>
+                </x-dropdown>
             </div>
         @endauth
 

@@ -103,7 +103,7 @@
 </style>
 
 <section class="home-bestseller-section">
-    <h2 class="home-bestseller-title">Buyer’s Favourite</h2>
+    <h2 class="home-bestseller-title">Our Products</h2>
     <div class="home-bestseller-grid">
         @foreach ($products as $product)
             <div class="home-bestseller-card">

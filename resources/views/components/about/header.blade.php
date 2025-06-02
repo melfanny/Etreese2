@@ -57,7 +57,8 @@
 
     .about-header .image-container img {
         width: 100%;
-        height: auto;
+        height: 600px;
+        object-fit: cover;
         border-radius: 5%;
         transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
     }

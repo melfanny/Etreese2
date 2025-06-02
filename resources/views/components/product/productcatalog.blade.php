@@ -1,72 +1,87 @@
 <style>
-.products-section {
-    background-color: #EBC4AE;
-    padding: 40px;
-}
+    .products-section {
+        background-color: #EBC4AE;
+        padding: 40px 20px;
+    }
 
-.catalog {
-    display: flex;
-    gap: 30px;
-    flex-wrap: wrap;
-    justify-content: center;
-}
+    .catalog {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
 
-.product-card {
-    background-color: #8B4513;
-    border-radius: 15px;
-    width: 300px;
-    height: 300px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
-}
+    .product-card {
+        background-color: #8B4513;
+        border-radius: 15px;
+        width: 280px;
+        min-height: 320px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.3s ease;
+    }
 
-.product-card img {
-    width: 100%;
-    height: 250px;
-    display: block;
-    border-radius: 10px;
-    flex-shrink: 0;
-}
+    .product-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
 
-.product-footer {
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+    .product-card img {
+        width: 100%;
+        aspect-ratio: 1 / 1.2;
+        padding: 15px;
+        box-sizing: border-box;
+        object-fit: cover;
+        border-radius: 20px;
+    }
 
-.product-name {
-    padding-left: 10px;
-    font-weight: bold;
-    font-size: 14px;
-    color: #ffffff;
-}
+    .product-footer {
+        padding: 10px 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: auto;
+    }
 
-.cart-button {
-    background-color: #8B4513; /* Dark brown */
-    border: none;
-    padding: 8px;
-    border-radius: 10px;
-    cursor: pointer;
-}
+    .product-name {
+        font-weight: bold;
+        font-size: 16px;
+        color: #ffffff;
+        flex: 1;
+        padding-right: 10px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 
-.cart-button img {
-    width: 30px;
-    height: 30px;
-}
 
-.product-price {
-    color: #ffffff;
-}
+
+    .cart-button:hover {
+        background-color: #5a3315;
+    }
+
+    .cart-button img {
+        width: 24px;
+        height: 24px;
+    }
+
+    .product-price {
+        color: #ffffff;
+        font-weight: bold;
+        font-size: 14px;
+        margin-left: 10px;
+        white-space: nowrap;
+    }
 </style>
 
 <section class="products-section">
     <div class="catalog">
         @foreach ($products as $product)
-             <a href="{{ route('product.productdetails', $product->id) }}">
+            <a href="{{ route('product.productdetails', $product->id) }}">
                 <div class="product-card">
-                    <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('images/default.jpg') }}" alt="{{ $product->name }}">
+                    <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('images/default.jpg') }}"
+                        alt="{{ $product->name }}">
                     <div class="product-footer">
                         <span class="product-name">{{ $product->name }}</span>
                         <span class="product-price">Rp{{ number_format($product->price, 0, ',', '.') }}</span>

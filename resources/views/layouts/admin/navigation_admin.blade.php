@@ -93,6 +93,88 @@
     .position-relative {
         position: relative;
     }
+
+    /* Responsive styles */
+    @media (max-width: 1024px) {
+        .top-bar {
+            padding-left: 10%;
+            padding-right: 10%;
+            height: 120px;
+        }
+
+        .nav-left,
+        .nav-right {
+            gap: 20px;
+            font-size: 16px;
+        }
+
+        .nav-center img {
+            height: 80px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .top-bar {
+            flex-wrap: wrap;
+            height: auto;
+            padding-left: 5%;
+            padding-right: 5%;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .nav-left,
+        .nav-right {
+            width: 100%;
+            justify-content: center;
+            gap: 15px;
+            font-size: 14px;
+            order: 2;
+        }
+
+        .nav-center {
+            width: 100%;
+            order: 1;
+            margin-bottom: 10px;
+        }
+
+        .nav-center img {
+            height: 70px;
+        }
+
+        .nav-link {
+            padding: 6px 10px;
+            font-size: 14px;
+        }
+
+        .icon-wrapper {
+            gap: 10px;
+        }
+
+        .badge-counter {
+            font-size: 10px;
+            min-width: 16px;
+            padding: 1px 4px;
+        }
+    }
+
+    @media (max-width: 480px) {
+
+        .nav-left,
+        .nav-right {
+            gap: 10px;
+            font-size: 12px;
+        }
+
+        .nav-link {
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+
+        .nav-center img {
+            height: 60px;
+        }
+    }
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
