@@ -49,28 +49,29 @@
 
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 28px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
         }
 
         .product-card {
             background: linear-gradient(120deg, #fff7f0 60%, #f3e5d7 100%);
-            border-radius: 18px;
-            box-shadow: 0 4px 18px rgba(136, 79, 34, 0.10), 0 1.5px 4px #e5c7b0;
+            border-radius: 16px;
+            box-shadow: 0 3px 12px rgba(136, 79, 34, 0.08), 0 1px 3px #e5c7b0;
             overflow: hidden;
             text-align: left;
             transition: box-shadow 0.18s, transform 0.18s;
-            border: 1.5px solid #e5c7b0;
-            padding: 32px 28px 26px 28px;
+            border: 1px solid #e5c7b0;
+            padding: 20px;
             position: relative;
             display: flex;
             flex-direction: column;
+            max-width: 320px;
+            margin: 0 auto;
         }
 
         .product-card:hover {
-            box-shadow: 0 8px 28px rgba(136, 79, 34, 0.18), 0 2px 8px #e5c7b0;
-            transform: translateY(-4px) scale(1.02);
-            border-color: #b36b2c;
+            box-shadow: 0 6px 20px rgba(136, 79, 34, 0.12), 0 2px 6px #e5c7b0;
+            transform: translateY(-2px) scale(1.01);
         }
 
         .img-wrapper {
@@ -81,34 +82,37 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            max-width: 200px;
+            margin: 0 auto;
         }
 
         .img-wrapper img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            border-radius: 0 0 12px 12px;
+            object-fit: contain;
+            border-radius: 8px;
+            padding: 8px;
         }
 
         .product-card h3 {
-            font-size: 1.18rem;
+            font-size: 1.1rem;
             color: #884F22;
-            margin: 18px 0 6px 0;
+            margin: 12px 0 4px 0;
             font-weight: bold;
             letter-spacing: 0.5px;
         }
 
         .product-card .period-stats {
             display: flex;
-            gap: 12px;
-            margin-bottom: 8px;
+            gap: 8px;
+            margin-bottom: 6px;
         }
 
         .period-box {
             background: #fff;
-            border-radius: 7px;
-            padding: 7px 13px;
-            font-size: 0.97rem;
+            border-radius: 6px;
+            padding: 5px 10px;
+            font-size: 0.9rem;
             color: #b36b2c;
             font-weight: 600;
             border: 1px solid #e5c7b0;
@@ -117,33 +121,33 @@
 
         .product-card .price {
             color: #b36b2c;
-            font-size: 1.08rem;
+            font-size: 1rem;
             font-weight: 600;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
 
         .product-card .qty {
             color: #1b7f3a;
-            font-size: 1.01rem;
+            font-size: 0.95rem;
             font-weight: 500;
             margin-bottom: 0;
         }
 
         .product-details {
-            margin-top: 10px;
+            margin-top: 8px;
             background: #fff7f0;
             border-radius: 8px;
-            padding: 10px 14px;
-            font-size: 0.98rem;
+            padding: 8px 12px;
+            font-size: 0.9rem;
         }
 
         .product-details ul {
             margin: 0;
-            padding-left: 18px;
+            padding-left: 16px;
         }
 
         .product-details li {
-            margin-bottom: 3px;
+            margin-bottom: 2px;
         }
 
         .stat-label {
@@ -174,104 +178,53 @@
         <div class="dashboard-header">
             <h2>Sales Dashboard</h2>
             <div class="filter-group">
-                <button class="filter-btn active">Week</button>
-                <button class="filter-btn">Month</button>
-                <button class="filter-btn">Year</button>
+                <a href="{{ route('admin.sales', ['period' => 'week']) }}" 
+                   class="filter-btn {{ $currentPeriod === 'week' ? 'active' : '' }}">Week</a>
+                <a href="{{ route('admin.sales', ['period' => 'month']) }}" 
+                   class="filter-btn {{ $currentPeriod === 'month' ? 'active' : '' }}">Month</a>
+                <a href="{{ route('admin.sales', ['period' => 'year']) }}" 
+                   class="filter-btn {{ $currentPeriod === 'year' ? 'active' : '' }}">Year</a>
             </div>
         </div>
         <div class="product-grid">
+            @foreach($salesData as $product)
             <div class="product-card">
                 <div class="img-wrapper">
-                    <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80"
-                        alt="Product A">
+                    <img src="{{ asset('storage/' . $product['image']) }}" alt="{{ $product['name'] }}">
                 </div>
-                <h3>Product A</h3>
+                <h3>{{ $product['name'] }}</h3>
                 <div class="period-stats">
                     <div class="period-box">
                         <span class="stat-label">Week:</span>
-                        <span class="stat-value">12 sold</span>
+                        <span class="stat-value">{{ $product['week_sold'] }} sold</span>
                     </div>
                     <div class="period-box">
                         <span class="stat-label">Month:</span>
-                        <span class="stat-value">44 sold</span>
+                        <span class="stat-value">{{ $product['month_sold'] }} sold</span>
                     </div>
                     <div class="period-box">
                         <span class="stat-label">Year:</span>
-                        <span class="stat-value">210 sold</span>
+                        <span class="stat-value">{{ $product['year_sold'] }} sold</span>
                     </div>
                 </div>
-                <div class="price">Income: Rp1.440.000</div>
-                <div class="qty">Total Sales: 44</div>
+                <div class="price">Income: Rp{{ number_format($product['total_income'], 0, ',', '.') }}</div>
+                <div class="qty">Total Sales: {{ $product['total_sales'] }}</div>
                 <div class="product-details">
                     <b>Details:</b>
-                    <ul>
-                        <li>Red Variant: 20 pcs</li>
-                        <li>Blue Variant: 14 pcs</li>
-                        <li>Green Variant: 10 pcs</li>
+                    <ul style="list-style: none; padding-left: 0; margin-top: 8px;">
+                        @foreach($product['variant_details'] as $variant)
+                            @if($variant === '')
+                                <li style="margin: 4px 0;"></li>
+                            @elseif(strpos($variant, '<b>') === 0)
+                                <li style="margin: 8px 0 4px 0; color: #884F22;">{!! $variant !!}</li>
+                            @else
+                                <li style="margin: 2px 0; color: #b36b2c;">{!! $variant !!}</li>
+                            @endif
+                        @endforeach
                     </ul>
                 </div>
             </div>
-            <div class="product-card">
-                <div class="img-wrapper">
-                    <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80"
-                        alt="Product B">
-                </div>
-                <h3>Product B</h3>
-                <div class="period-stats">
-                    <div class="period-box">
-                        <span class="stat-label">Week:</span>
-                        <span class="stat-value">7 sold</span>
-                    </div>
-                    <div class="period-box">
-                        <span class="stat-label">Month:</span>
-                        <span class="stat-value">21 sold</span>
-                    </div>
-                    <div class="period-box">
-                        <span class="stat-label">Year:</span>
-                        <span class="stat-value">110 sold</span>
-                    </div>
-                </div>
-                <div class="price">Income: Rp623.000</div>
-                <div class="qty">Total Sales: 21</div>
-                <div class="product-details">
-                    <b>Details:</b>
-                    <ul>
-                        <li>Small: 8 pcs</li>
-                        <li>Medium: 7 pcs</li>
-                        <li>Large: 6 pcs</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="img-wrapper">
-                    <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80"
-                        alt="Product C">
-                </div>
-                <h3>Product C</h3>
-                <div class="period-stats">
-                    <div class="period-box">
-                        <span class="stat-label">Week:</span>
-                        <span class="stat-value">2 sold</span>
-                    </div>
-                    <div class="period-box">
-                        <span class="stat-label">Month:</span>
-                        <span class="stat-value">12 sold</span>
-                    </div>
-                    <div class="period-box">
-                        <span class="stat-label">Year:</span>
-                        <span class="stat-value">50 sold</span>
-                    </div>
-                </div>
-                <div class="price">Income: Rp180.000</div>
-                <div class="qty">Total Sales: 12</div>
-                <div class="product-details">
-                    <b>Details:</b>
-                    <ul>
-                        <li>Black: 5 pcs</li>
-                        <li>White: 7 pcs</li>
-                    </ul>
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
     @include('layouts.footer')

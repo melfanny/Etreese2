@@ -118,7 +118,13 @@
         <a href="{{ route('admin.sales') }}"
             class="nav-link {{ request()->routeIs('admin.sales') ? 'active' : '' }}">SALES</a>
         <a href="{{ route('admin.stock') }}"
-            class="nav-link {{ request()->routeIs('admin.stock') ? 'active' : '' }}">STOCK</a>
+            class="nav-link position-relative {{ request()->routeIs('admin.stock') ? 'active' : '' }}">STOCK
+            @if(isset($lowStockCount) && $lowStockCount > 0)
+                <span class="badge-counter">
+                    <span class="visually-hidden">!</span>
+                </span>
+            @endif
+        </a>
 
         @auth
             <div class="icon-wrapper">
