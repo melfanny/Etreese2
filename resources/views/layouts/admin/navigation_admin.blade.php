@@ -121,8 +121,7 @@
             class="nav-link position-relative {{ request()->routeIs('admin.stock') ? 'active' : '' }}">STOCK
             @if(isset($lowStockCount) && $lowStockCount > 0)
                 <span class="badge-counter">
-                    {{ $lowStockCount }}
-                    <span class="visually-hidden">low stock items</span>
+                    <span class="visually-hidden">!</span>
                 </span>
             @endif
         </a>
