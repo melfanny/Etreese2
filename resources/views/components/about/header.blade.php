@@ -122,7 +122,7 @@
     <div class="about-header">
         <section class="section">
             <div class="image-container">
-                <img src="https://i.pinimg.com/736x/8f/41/71/8f41711e801cfe26220e63ebdf128083.jpg" alt="About Image">
+                <img src="/images/etreese logo.jpg" alt="About Image">
             </div>
             <div class="content-container">
                 <div class="box">

@@ -162,5 +162,58 @@
                 <p>No items in the order to pay.</p>
             @endif
         </div>
+        <!-- Midtrans JS Client -->
+<script src="https://app.sandbox.midtrans.com/snap/snap.js"
+    data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}"></script>
+
+<!-- Tombol trigger pembayaran Snap -->
+@if($order->snap_token)
+    <div style="margin-top: 20px;">
+        <button id="pay-button" class="proceed-payment-btn">Bayar dengan Midtrans</button>
+    </div>
+
+    <pre id="result-json" style="padding: 10px; background-color: #fff; border-radius: 8px; margin-top: 10px;"></pre>
+
+    <script>
+        const payBtn = document.getElementById('pay-button');
+        if (payBtn) {
+            payBtn.addEventListener('click', function () {
+                fetch('{{ route('order.getSnapToken', $order->id) }}')
+                    .then(res => {
+                        if (!res.ok) throw new Error('Gagal ambil snap token');
+                        return res.json();
+                    })
+                    .then(data => {
+                        if (!data.snap_token) {
+                            alert('Token pembayaran tidak tersedia.');
+                            return;
+                        }
+
+                        window.snap.pay(data.snap_token, {
+                            onSuccess: function (result) {
+                                document.getElementById('result-json').textContent = JSON.stringify(result, null, 2);
+                                alert("Pembayaran berhasil!");
+                            },
+                            onPending: function (result) {
+                                document.getElementById('result-json').textContent = JSON.stringify(result, null, 2);
+                                alert("Pembayaran tertunda.");
+                            },
+                            onError: function (result) {
+                                document.getElementById('result-json').textContent = JSON.stringify(result, null, 2);
+                                alert("Pembayaran gagal.");
+                            },
+                            onClose: function () {
+                                alert("Anda menutup popup pembayaran.");
+                            }
+                        });
+                    })
+                    .catch(err => {
+                        alert("Terjadi kesalahan: " + err.message);
+                        console.error(err);
+                    });
+            });
+        }
+    </script>
+@endif
     </div>
 @endsection

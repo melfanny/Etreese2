@@ -110,27 +110,27 @@
             <div class="left-content">
                 <div class="about-series-box-container">
                     <div class="about-series-box">
-                        <img src="https://i.pinimg.com/736x/4d/70/f6/4d70f6ea6be775eb642a5dcf7daaf4c9.jpg"
+                        <img src="/images/anggrek bulan realistis.png"
                             alt="Anggrek Bulan">
                         <div class="box-footer">
                             <h4>Anggrek Bulan</h4>
                         </div>
                     </div>
                     <div class="about-series-box">
-                        <img src="https://i.pinimg.com/736x/4d/70/f6/4d70f6ea6be775eb642a5dcf7daaf4c9.jpg" alt="Melati">
+                        <img src="/images/melati realistis.png" alt="Melati">
                         <div class="box-footer">
                             <h4>Melati</h4>
                         </div>
                     </div>
                     <div class="about-series-box">
-                        <img src="https://i.pinimg.com/736x/4d/70/f6/4d70f6ea6be775eb642a5dcf7daaf4c9.jpg"
+                        <img src="/images/rafflesia realistis.png"
                             alt="Rafflesia Arnoldi">
                         <div class="box-footer">
                             <h4>Rafflesia Arnoldi</h4>
                         </div>
                     </div>
                     <div class="about-series-box">
-                        <img src="https://i.pinimg.com/736x/4d/70/f6/4d70f6ea6be775eb642a5dcf7daaf4c9.jpg"
+                        <img src="/images/kenanga realistis.png"
                             alt="Kenanga">
                         <div class="box-footer">
                             <h4>Kenanga</h4>

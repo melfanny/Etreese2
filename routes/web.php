@@ -135,4 +135,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/checkout', [OrderController::class, 'checkout'])->name('order.checkout'); // handle checkout submission
 });
 
+Route::get('/orders/{order}/snap-token', [OrderController::class, 'getSnapToken'])->name('order.getSnapToken');
+
+
+
 require __DIR__ . '/auth.php';

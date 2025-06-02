@@ -99,7 +99,7 @@
         <div class="about-why-cards">
             <div class="about-why-card">
                 <div class="about-why-icon">
-                    <img src="https://i.pinimg.com/736x/ea/70/ce/ea70ce634cb5cf0996efc16fecc6b5db.jpg"
+                    <img src="/images/rafflesia hitam.png"
                         alt="Indonesia Asset">
                 </div>
                 <h3 class="about-why-heading">Indonesia Asset</h3>
@@ -110,7 +110,7 @@
             </div>
             <div class="about-why-card">
                 <div class="about-why-icon">
-                    <img src="https://i.pinimg.com/736x/ea/70/ce/ea70ce634cb5cf0996efc16fecc6b5db.jpg"
+                    <img src="/images/melati hitam.png"
                         alt="Eco Friendly">
                 </div>
                 <h3 class="about-why-heading">Eco Friendly</h3>
@@ -120,7 +120,7 @@
             </div>
             <div class="about-why-card">
                 <div class="about-why-icon">
-                    <img src="https://i.pinimg.com/736x/ea/70/ce/ea70ce634cb5cf0996efc16fecc6b5db.jpg" alt="Customer">
+                    <img src="/images/kenanga hitam.png" alt="Customer">
                 </div>
                 <h3 class="about-why-heading">Customer</h3>
                 <p class="about-why-text">

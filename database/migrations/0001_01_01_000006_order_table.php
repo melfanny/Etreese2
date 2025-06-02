@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
             $table->decimal('total', 12, 2);
+            $table->string('snap_token')->nullable();
             $table->enum('status', [
                 'waiting_payment',
                 'paid',

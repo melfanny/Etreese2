@@ -5,6 +5,9 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
+use Midtrans\Snap;
+use Midtrans\Config;
+use Midtrans\Transaction;
 
 class OrderController extends Controller
 {
@@ -60,7 +63,7 @@ class OrderController extends Controller
 
         \App\Models\Cart::whereIn('id', $cartIds)->delete();
 
-        return redirect()->route('order.payment', $order);
+        return redirect()->route('order.payment', ['order' => $order->id]);
     }
 
     // Halaman pembayaran
@@ -69,9 +72,49 @@ class OrderController extends Controller
         if ($order->user_id != Auth::id())
             abort(403);
 
+        // Set your Merchant Server Key
+        \Midtrans\Config::$serverKey = config('midtrans.serverKey'); 
+        // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
+        \Midtrans\Config::$isProduction = false;
+        // Set sanitization on (default)
+        \Midtrans\Config::$isSanitized = true;
+        // Set 3DS transaction for credit card to true
+        \Midtrans\Config::$is3ds = true;
+
+
+    // Buat Snap Token
+    if (!$order->snap_token) {
+        $params = [
+            'transaction_details' => [
+                'order_id' => 'ETREESE-' . $order->id . '-' . time(), // unik
+                'gross_amount' => $order->total,
+            ],
+            'customer_details' => [
+                'first_name' => Auth::user()->name,
+                'email' => Auth::user()->email,
+            ],
+        ];
+        $snapToken = Snap::getSnapToken($params);
+        // Simpan Snap token ke order
+        $order->snap_token = $snapToken;
+        $order->save();
+    }
+   
+
         // Pass only the order to the view
         return view('orders.payment', compact('order'));
     }
+
+    public function getSnapToken(Order $order)
+{
+    if ($order->user_id != Auth::id()) {
+        abort(403);
+    }
+
+    return response()->json([
+        'snap_token' => $order->snap_token
+    ]);
+}
 
     // Simulasi bayar
     public function pay(Order $order)
@@ -113,5 +156,4 @@ class OrderController extends Controller
         $order->update(['status' => 'completed']);
         return back()->with('success', 'Pesanan selesai!');
     }
-
 }
