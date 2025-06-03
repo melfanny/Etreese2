@@ -1,30 +1,49 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Color;
+use App\Models\Size;
+use App\Models\Stock;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Midtrans\Snap;
 use Midtrans\Config;
-use Midtrans\Transaction;
 
 class OrderController extends Controller
 {
     // Checkout: buat order baru
     public function checkout(Request $request)
     {
-
-        if (empty($request->cart_ids)) {
+        if (empty($request->cart_ids) || !is_array($request->cart_ids)) {
             return back()->with('error', 'Pilih setidaknya satu produk untuk checkout.');
         }
 
         $cartIds = $request->cart_ids;
 
-        if (empty($cartIds) || !is_array($cartIds)) {
-            return back()->with('error', 'Pilih setidaknya satu produk untuk checkout.');
+        $carts = \App\Models\Cart::whereIn('id', $cartIds)
+            ->with('product', 'size', 'color')
+            ->get();
+
+        // Validasi stok untuk setiap item di cart
+        foreach ($carts as $cart) {
+            $stock = \App\Models\Stock::where('product_id', $cart->product_id)
+                ->where('color_id', $cart->color_id)
+                ->where('size_id', $cart->size_id)
+                ->first();
+
+            if (!$stock || $stock->quantity < $cart->quantity) {
+                $productName = $cart->product->name;
+                $colorName = $cart->color->name ?? 'N/A';
+                $sizeName = $cart->size->name ?? 'N/A';
+                $availableStock = $stock ? $stock->quantity : 0;
+                
+                return back()->with('error', "Stok tidak mencukupi untuk produk: {$productName} ({$colorName} - {$sizeName}). Stok tersedia: {$availableStock}");
+            }
         }
-        $carts = \App\Models\Cart::whereIn('id', $cartIds)->with('product', 'size', 'color')->get();
 
         // Hitung total harga seluruh produk di keranjang
         $totalPrice = 0;
@@ -48,7 +67,7 @@ class OrderController extends Controller
 
         $order = Order::create([
             'user_id' => auth()->id(),
-            'product_id' => $carts->first()->product_id, // keep first product_id for compatibility
+            'product_id' => $carts->first()->product_id,
             'total' => $totalPrice,
             'status' => 'waiting_payment',
             'shipping_method' => $request->shipping_method ?? null,
@@ -72,69 +91,63 @@ class OrderController extends Controller
         if ($order->user_id != Auth::id())
             abort(403);
 
-        // Set your Merchant Server Key
-        \Midtrans\Config::$serverKey = config('midtrans.serverKey'); 
-        // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
-        \Midtrans\Config::$isProduction = false;
-        // Set sanitization on (default)
-        \Midtrans\Config::$isSanitized = true;
-        // Set 3DS transaction for credit card to true
-        \Midtrans\Config::$is3ds = true;
+        // Set Midtrans config
+        Config::$serverKey = config('midtrans.serverKey');
+        Config::$isProduction = false;
+        Config::$isSanitized = true;
+        Config::$is3ds = true;
 
+        // Buat Snap Token jika belum ada
+        if (!$order->snap_token) {
+            $params = [
+                'transaction_details' => [
+                    'order_id' => 'ETREESE-' . $order->id . '-' . time(),
+                    'gross_amount' => $order->total,
+                ],
+                'customer_details' => [
+                    'first_name' => Auth::user()->name,
+                    'email' => Auth::user()->email,
+                ],
+            ];
+            $snapToken = Snap::getSnapToken($params);
+            $order->snap_token = $snapToken;
+            $order->save();
+        }
 
-    // Buat Snap Token
-    if (!$order->snap_token) {
-        $params = [
-            'transaction_details' => [
-                'order_id' => 'ETREESE-' . $order->id . '-' . time(), // unik
-                'gross_amount' => $order->total,
-            ],
-            'customer_details' => [
-                'first_name' => Auth::user()->name,
-                'email' => Auth::user()->email,
-            ],
-        ];
-        $snapToken = Snap::getSnapToken($params);
-        // Simpan Snap token ke order
-        $order->snap_token = $snapToken;
-        $order->save();
-    }
-   
-
-        // Pass only the order to the view
         return view('orders.payment', compact('order'));
     }
 
+    // API untuk ambil snap_token (opsional)
     public function getSnapToken(Order $order)
-{
-    if ($order->user_id != Auth::id()) {
-        abort(403);
-    }
+    {
+        if ($order->user_id != Auth::id()) {
+            abort(403);
+        }
 
-    return response()->json([
-        'snap_token' => $order->snap_token
-    ]);
-}
+        return response()->json([
+            'snap_token' => $order->snap_token
+        ]);
+    }
 
     // Simulasi bayar
     public function pay(Order $order)
     {
         if ($order->user_id != Auth::id())
             abort(403);
+
         $order->update(['status' => 'paid']);
+
         return redirect()->route('order.myorders')->with('success', 'Pembayaran berhasil!');
     }
 
     // Lihat pesanan user
     public function myOrders(Request $request)
     {
-        $status = $request->get('status', 'waiting_payment'); // default = waiting_payment
-
+        $status = $request->get('status', 'waiting_payment');
         $validStatuses = ['waiting_payment', 'paid', 'processed', 'shipped', 'completed'];
 
-        // Validasi agar hanya status yang valid diproses
         if (!in_array($status, $validStatuses)) {
-            abort(404); // atau bisa redirect ke default
+            abort(404);
         }
 
         $orders = Order::with('product')
@@ -149,11 +162,42 @@ class OrderController extends Controller
     // User klik pesanan diterima
     public function complete(Order $order)
     {
-        if ($order->user_id != Auth::id())
+        if ($order->user_id != Auth::id() || $order->status !== 'shipped')
             abort(403);
-        if ($order->status !== 'shipped')
-            abort(403);
-        $order->update(['status' => 'completed']);
-        return back()->with('success', 'Pesanan selesai!');
+
+        DB::beginTransaction();
+        try {
+            $order->update(['status' => 'completed']);
+
+            foreach ($order->checkout_data as $item) {
+                $product = Product::findOrFail($item['product_id']);
+
+                $color = Color::where('product_id', $product->id)
+                    ->where('name', $item['color'])
+                    ->first();
+
+                $size = Size::where('product_id', $product->id)
+                    ->where('name', $item['size'])
+                    ->first();
+
+                if ($color && $size) {
+                    $stock = Stock::where('product_id', $product->id)
+                        ->where('color_id', $color->id)
+                        ->where('size_id', $size->id)
+                        ->first();
+
+                    if ($stock) {
+                        $newQuantity = max(0, $stock->quantity - $item['quantity']);
+                        $stock->update(['quantity' => $newQuantity]);
+                    }
+                }
+            }
+
+            DB::commit();
+            return back()->with('success', 'Pesanan selesai!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Terjadi kesalahan saat menyelesaikan pesanan: ' . $e->getMessage());
+        }
     }
 }

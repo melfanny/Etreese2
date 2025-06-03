@@ -215,6 +215,26 @@
     </script>
 @endif
 
+@if(session('error'))
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Stok Tidak Mencukupi!',
+            text: @json(session('error')),
+            confirmButtonColor: '#d33',
+            showCancelButton: true,
+            cancelButtonText: 'Kembali',
+            confirmButtonText: 'Lihat Stok',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect ke halaman produk untuk melihat stok
+                window.location.href = "{{ route('products.index') }}";
+            }
+        });
+    </script>
+@endif
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const checkAll = document.getElementById('checkAll');

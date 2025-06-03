@@ -123,6 +123,31 @@
     }
 </style>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if(session('error'))
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Stok Tidak Mencukupi!',
+            text: @json(session('error')),
+            confirmButtonColor: '#d33',
+            showCancelButton: true,
+            cancelButtonText: 'Kembali ke Cart',
+            confirmButtonText: 'Lihat Stok',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect ke halaman produk untuk melihat stok
+                window.location.href = "{{ route('products.index') }}";
+            } else {
+                // Redirect kembali ke cart
+                window.location.href = "{{ route('cart.index') }}";
+            }
+        });
+    </script>
+@endif
+
 @if(isset($carts) && $carts->count() > 0)
     @php $totalPrice = 0; @endphp
     <form method="POST" action="{{ route('order.checkout') }}">

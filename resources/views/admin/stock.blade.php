@@ -221,10 +221,33 @@
             text-align: left;
         }
 
-        .alert-warning ul {
-            margin-bottom: 0;
+        .stock-alert {
+            background: #fff7ed;
+            border: 1.5px solid #e0c3a0;
+            border-radius: 8px;
+            color: #b36b2c;
+            padding: 0.5rem 0.8rem;
             margin-top: 0.5rem;
-            padding-left: 1.2rem;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stock-alert.warning {
+            background: #fff7ed;
+            border-color: #e0c3a0;
+            color: #b36b2c;
+        }
+
+        .stock-alert.danger {
+            background: #fff5f5;
+            border-color: #feb2b2;
+            color: #c53030;
+        }
+
+        .stock-alert i {
+            font-size: 1rem;
         }
 
         @media (max-width: 900px) {
@@ -277,6 +300,19 @@
         <div class="dashboard-header">
             <h2>Stock Management</h2>
         </div>
+        @if($stockLimitAlerts->isNotEmpty())
+            <div class="alert-warning">
+                <strong>Perhatian!</strong> Beberapa produk memiliki stok yang mendekati atau di bawah batas:
+                <ul>
+                    @foreach($stockLimitAlerts as $alert)
+                        <li>
+                            {{ $alert->product_name }} ({{ $alert->color_name }} - {{ $alert->size_name }}):
+                            Stok {{ $alert->stock }} dari batas {{ $alert->stock_limit }}
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <div class="product-grid">
             @foreach($products as $product)
                     @php
@@ -324,18 +360,38 @@
                                 @endforeach
                             </div>
                         </div>
-                        <div class="stock-row">
-                            <span class="stock-info">Stock: <b>{{ $currentStock }}</b></span>
-                            <div class="limit-group">
-                                <button type="button" class="limit-btn" onclick="stepLimit('{{ $inputId }}', -1)">&#8722;</button>
-                                <input type="text" name="stock_limit[main]" id="{{ $inputId }}" class="limit-input"
-                                    value="{{ $stockLimit }}" min="0" data-default="{{ $stockLimit }}" readonly>
-                                <button type="button" class="limit-btn" onclick="stepLimit('{{ $inputId }}', 1)">&#43;</button>
-                                <button type="button" class="reset-btn" onclick="resetLimit('{{ $inputId }}')">
-                                    <i class="fas fa-sync-alt"></i> Reset
-                                </button>
+                        @foreach($productSizes as $size)
+                            @php
+                                $sizeId = is_object($size) ? $size->id : 0;
+                                $sizeName = is_object($size) ? $size->name : '-';
+                                $stock = $product->stocks->where('size_id', $sizeId)->first();
+                                $currentStock = $stock ? $stock->quantity : 0;
+                                $stockLimit = $stock ? $stock->stock_limit : ($product->stock_limit ?? 0);
+                                $inputId = 'limit-' . $product->id . '-' . $sizeId;
+                                $isLowStock = $stockLimit > 0 && $currentStock <= $stockLimit;
+                                $alertClass = $currentStock == 0 ? 'danger' : 'warning';
+                            @endphp
+                            <div class="stock-row">
+                                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                    <span class="stock-info">{{ $sizeName }} Stock: <b>{{ $currentStock }}</b></span>
+                                    @if($isLowStock)
+                                        <div class="stock-alert {{ $alertClass }}">
+                                            <i class="fas {{ $currentStock == 0 ? 'fa-exclamation-circle' : 'fa-exclamation-triangle' }}"></i>
+                                            {{ $currentStock == 0 ? 'Stok Habis!' : 'Stok Mendekati Batas!' }}
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="limit-group">
+                                    <button type="button" class="limit-btn" onclick="stepLimit('{{ $inputId }}', -1)">&#8722;</button>
+                                    <input type="text" name="stock_limit[{{ $sizeId }}]" id="{{ $inputId }}" class="limit-input"
+                                        value="{{ $stockLimit }}" min="0" data-default="{{ $stockLimit }}" readonly>
+                                    <button type="button" class="limit-btn" onclick="stepLimit('{{ $inputId }}', 1)">&#43;</button>
+                                    <button type="button" class="reset-btn" onclick="resetLimit('{{ $inputId }}')">
+                                        <i class="fas fa-sync-alt"></i> Reset
+                                    </button>
+                                </div>
                             </div>
-                        </div>
+                        @endforeach
                         <button type="submit" class="save-btn">
                             <i class="fas fa-save"></i> Save
                         </button>

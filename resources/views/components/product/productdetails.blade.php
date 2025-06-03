@@ -131,6 +131,21 @@
         gap: 8px;
         margin-bottom: 6px;
     }
+
+    .option-btn.disabled {
+        background-color: #cccccc;
+        color: #666666;
+        cursor: not-allowed;
+    }
+
+    .stock-text {
+        font-size: 15px;
+        color: #666666;
+    }
+
+    .stock-text:has(+ .disabled) {
+        color: #ff4444;
+    }
 </style>
 
 <section class="product-detail-section">
@@ -201,13 +216,59 @@
     </div>
 </section>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if(session('error'))
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Stok Tidak Tersedia!',
+            text: @json(session('error')),
+            confirmButtonColor: '#d33',
+            showCancelButton: true,
+            cancelButtonText: 'Kembali',
+            confirmButtonText: 'Lihat Produk Lain',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect ke halaman katalog produk
+                window.location.href = "{{ route('products.index') }}";
+            }
+        });
+    </script>
+@endif
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const sizeButtons = document.querySelectorAll('.size-btn');
         const sizeInput = document.getElementById('selectedSizeId');
+        const addToCartForm = document.getElementById('addToCartForm');
+
+        // Tambahkan class disabled untuk ukuran yang stoknya 0
+        sizeButtons.forEach(button => {
+            const stockText = button.nextElementSibling;
+            const stockQty = parseInt(stockText.textContent.replace('Stok: ', ''));
+            if (stockQty <= 0) {
+                button.classList.add('disabled');
+                button.style.opacity = '0.5';
+                button.style.cursor = 'not-allowed';
+                stockText.style.color = '#ff4444';
+            }
+        });
 
         sizeButtons.forEach(button => {
             button.addEventListener('click', function () {
+                // Skip jika tombol disabled
+                if (this.classList.contains('disabled')) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Stok Habis!',
+                        text: 'Maaf, ukuran ini sedang tidak tersedia.',
+                        confirmButtonColor: '#d33'
+                    });
+                    return;
+                }
+
                 // Hapus class selected dari semua tombol
                 sizeButtons.forEach(btn => btn.classList.remove('selected'));
                 // Tambahkan class selected ke tombol yang diklik
@@ -217,10 +278,15 @@
             });
         });
 
-        document.getElementById('addToCartForm').addEventListener('submit', function (e) {
+        addToCartForm.addEventListener('submit', function (e) {
             if (!sizeInput.value) {
                 e.preventDefault();
-                alert('Silakan pilih ukuran terlebih dahulu!');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Pilih Ukuran!',
+                    text: 'Silakan pilih ukuran terlebih dahulu!',
+                    confirmButtonColor: '#3085d6'
+                });
             }
         });
     });

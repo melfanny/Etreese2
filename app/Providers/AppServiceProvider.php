@@ -45,7 +45,8 @@ class AppServiceProvider extends ServiceProvider
                         $currentStock = $stock ? $stock->quantity : 0;
                         $stockLimit = $stock ? $stock->stock_limit : ($product->stock_limit ?? 0);
                         
-                        if($currentStock <= $stockLimit) {
+                        // Only count if stock is less than or equal to limit AND limit is greater than 0
+                        if($stockLimit > 0 && $currentStock <= $stockLimit) {
                             $lowStockCount++;
                         }
                     }

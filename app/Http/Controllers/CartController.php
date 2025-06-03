@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Product;
 use App\Models\Address;
+use App\Models\Stock;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -25,10 +26,27 @@ class CartController extends Controller
         // Ambil color_id dari database
         $colorId = $product->colors->first()?->id ?? null;
 
-        $cart = Cart::where('user_id', Auth::id())->where('product_id', $id)->where('size_id', $sizeId)
-            ->where('color_id', $colorId)->first();
+        // Cek stok tersedia
+        $stock = Stock::where('product_id', $id)
+            ->where('color_id', $colorId)
+            ->where('size_id', $sizeId)
+            ->first();
+
+        if (!$stock || $stock->quantity <= 0) {
+            return back()->with('error', 'Maaf, stok produk ini sedang kosong.');
+        }
+
+        $cart = Cart::where('user_id', Auth::id())
+            ->where('product_id', $id)
+            ->where('size_id', $sizeId)
+            ->where('color_id', $colorId)
+            ->first();
 
         if ($cart) {
+            // Cek apakah penambahan quantity melebihi stok
+            if ($cart->quantity >= $stock->quantity) {
+                return back()->with('error', 'Maaf, stok tidak mencukupi untuk menambahkan produk ini.');
+            }
             $cart->increment('quantity');
         } else {
             Cart::create([
@@ -97,6 +115,21 @@ class CartController extends Controller
             ->first();
 
         if ($cart) {
+            // Cek stok tersedia
+            $stock = Stock::where('product_id', $cart->product_id)
+                ->where('color_id', $cart->color_id)
+                ->where('size_id', $cart->size_id)
+                ->first();
+
+            if (!$stock || $stock->quantity <= $cart->quantity) {
+                $productName = $cart->product->name;
+                $colorName = $cart->color->name ?? 'N/A';
+                $sizeName = $cart->size->name ?? 'N/A';
+                $availableStock = $stock ? $stock->quantity : 0;
+                
+                return back()->with('error', "Stok tidak mencukupi untuk produk: {$productName} ({$colorName} - {$sizeName}). Stok tersedia: {$availableStock}");
+            }
+
             $cart->increment('quantity');
         }
 

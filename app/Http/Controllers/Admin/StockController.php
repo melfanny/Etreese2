@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Stock;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class StockController extends Controller
 {
@@ -52,7 +53,8 @@ class StockController extends Controller
                     $currentStock = $stock ? $stock->quantity : 0;
                     $stockLimit = $stock ? $stock->stock_limit : ($product->stock_limit ?? 0);
                     
-                    if ($currentStock <= $stockLimit) {
+                    // Only add alert if stock limit is greater than 0 and current stock is less than or equal to limit
+                    if ($stockLimit > 0 && $currentStock <= $stockLimit) {
                         $stockLimitAlerts->push((object)[
                             'product_name' => $product->name,
                             'color_name' => $color->name,
@@ -72,32 +74,40 @@ class StockController extends Controller
     {
         try {
             $stockLimits = $request->input('stock_limit', []);
-            if (!is_array($stockLimits)) {
-                // Fallback: single value (old form)
-                $stockLimits = [$request->input('variant_key', '0-0') => $request->input('stock_limit')];
+            
+            // Get the product with its colors and sizes
+            $product = Product::with(['colors', 'sizes'])->findOrFail($productId);
+            
+            // Get the first available color or use null if no colors exist
+            $defaultColorId = $product->colors->first()?->id;
+            
+            if (!$defaultColorId) {
+                return redirect()->back()->with('error', 'Produk harus memiliki minimal satu warna!');
             }
-            foreach ($stockLimits as $variantKey => $limit) {
-                [$colorId, $sizeId] = explode('-', $variantKey);
-                $stock = \App\Models\Stock::where('product_id', $productId)
-                    ->where('color_id', $colorId)
-                    ->where('size_id', $sizeId)
-                    ->first();
-                if ($stock) {
-                    $stock->stock_limit = $limit;
-                    $stock->save();
-                } else {
-                    \App\Models\Stock::create([
-                        'product_id' => $productId,
-                        'color_id' => $colorId,
-                        'size_id' => $sizeId,
-                        'quantity' => 0,
-                        'stock_limit' => $limit
-                    ]);
+            
+            foreach ($stockLimits as $sizeId => $limit) {
+                // Skip if sizeId is not numeric
+                if (!is_numeric($sizeId)) continue;
+                
+                // Find or create stock record for this size and color
+                $stock = Stock::firstOrNew([
+                    'product_id' => $productId,
+                    'size_id' => $sizeId,
+                    'color_id' => $defaultColorId
+                ]);
+                
+                // Set quantity to 0 if it's a new record
+                if (!$stock->exists) {
+                    $stock->quantity = 0;
                 }
+                
+                $stock->stock_limit = $limit;
+                $stock->save();
             }
+            
             return redirect()->back()->with('success', 'Stock limit berhasil diperbarui!');
         } catch (\Exception $e) {
-            \Log::error('Error updating stock limits', [
+            Log::error('Error updating stock limits', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
