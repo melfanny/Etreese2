@@ -189,13 +189,13 @@
 
             <!-- Form content on the right -->
             <div class="form-content">
-                <div class="form-title">Welcome, new user!</div>
+                <div class="form-title">Selamat datang, pengguna baru!</div>
                 <form method="POST" action="{{ route('register') }}" class="form-box">
                     @csrf
 
                     {{-- Name --}}
                     <div class="form-group">
-                        <label for="name">Name</label>
+                        <label for="name">Nama</label>
                         <x-text-input id="name" type="text" name="name" :value="old('name')" required autofocus
                             autocomplete="name" />
                         <x-input-error :messages="$errors->get('name')" class="mt-2" />
@@ -219,15 +219,15 @@
 
                     {{-- Confirm Password --}}
                     <div class="form-group">
-                        <label for="password_confirmation">Confirm Password</label>
+                        <label for="password_confirmation">Konfirmasi Password</label>
                         <x-text-input id="password_confirmation" type="password" name="password_confirmation" required
                             autocomplete="new-password" />
                         <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                     </div>
 
                     <div class="login-link">
-                        <button type="submit" class="submit-button">Register</button>
-                        <a href="{{ route('login') }}">Already have an account? Click here!</a>
+                        <button type="submit" class="submit-button">Daftar</button>
+                        <a href="{{ route('login') }}">Sudah mempunyai akun? Klik disini!</a>
                     </div>
                 </form>
             </div>

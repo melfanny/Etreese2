@@ -85,13 +85,12 @@
         <!-- Left section -->
         <div class="footer-left">
             <h2>Etreese</h2>
-            <p>Where contemporary fashion meets Nusantara heritage. Each piece tells a story of cultural pride and
-                modern
-                sophistication.</p>
+            <p>Di sinilah fesyen kontemporer bertemu dengan warisan Nusantara. Setiap karya menceritakan kisah tentang
+                kebanggaan budaya dan keanggunan modern.
+            </p>
             <div class="social-icons">
-                <a href="https://facebook.com"><i class="fab fa-facebook-f"></i></a>
-                <a href="https://facebook.com"><i class="fab fa-instagram"></i></a>
-                <a href="https://facebook.com"><i class="fab fa-twitter"></i></a>
+                <a href="https://instagram.com/etreese.id"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.tiktok.com/@etreese.id?_t=ZS-8wvVojtQEK1&_r=1"><i class="fab fa-tiktok"></i></a>
             </div>
         </div>
 

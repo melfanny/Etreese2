@@ -85,6 +85,6 @@
             <span>WHAT IS</span><br>
             <strong>ETREESE ?</strong>
         </div>
-        <a href="{{ route('aboutus') }}" class="btn-learn">Learn More</a>
+        <a href="{{ route('aboutus') }}" class="btn-learn">Pelajari lebih</a>
     </div>
 </div>

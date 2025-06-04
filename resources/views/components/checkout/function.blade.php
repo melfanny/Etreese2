@@ -166,10 +166,10 @@
                                 class="checkout-image" />
                             <div class="checkout-details">
                                 <h3 class="checkout-title">{{ $cart->product->name }}</h3>
-                                <p class="checkout-info">Size: {{ $cart->size->name ?? 'N/A' }}</p>
-                                <p class="checkout-info">Color: {{ $cart->color->name ?? 'N/A' }}</p>
+                                <p class="checkout-info">Ukuran: {{ $cart->size->name ?? 'N/A' }}</p>
+                                <p class="checkout-info">Warna: {{ $cart->color->name ?? 'N/A' }}</p>
                                 <p class="checkout-info">Qty: {{ $cart->quantity }}</p>
-                                <p class="checkout-info">Price: Rp {{ number_format($cart->product->price, 0, ',', '.') }}</p>
+                                <p class="checkout-info">Harga: Rp {{ number_format($cart->product->price, 0, ',', '.') }}</p>
 
                                 <input type="hidden" name="address_id" value="{{ $address->id }}">
 
@@ -179,7 +179,7 @@
                 @endforeach
 
                 <div class="summary-row">
-                    <label for="shipping_method">Shipping Method:</label><br>
+                    <label for="shipping_method">Metode Pengiriman:</label><br>
                     <select name="shipping_method" id="shipping_method" class="summary-select">
                         <option value="jne">JNE</option>
                         <option value="jnt">J&T</option>
@@ -188,7 +188,7 @@
                 </div>
 
                 <div class="summary-row">
-                    <label for="payment_method">Payment Method:</label><br>
+                    <label for="payment_method">Metode Pembayaran:</label><br>
                     <select name="payment_method" id="payment_method" class="summary-select">
                         <option value="bca">BCA</option>
                         <option value="mandiri">Mandiri</option>
@@ -196,11 +196,11 @@
                 </div>
                 <div class="checkout-summary">
                     <div class="summary-total">Total: Rp {{ number_format($totalPrice, 0, ',', '.') }}</div>
-                    <button type="submit" class="proceed-payment-btn">Proceed to Payment</button>
+                    <button type="submit" class="proceed-payment-btn">Bayar</button>
                 </div>
             </div>
         </div>
     </form>
 @else
-    <p>No items in the cart to checkout.</p>
+    <p>Tidak ada produk di keranjang untuk dibayar.</p>
 @endif

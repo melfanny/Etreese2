@@ -103,13 +103,13 @@
 </style>
 
 <section class="home-bestseller-section">
-    <h2 class="home-bestseller-title">Our Products</h2>
+    <h2 class="home-bestseller-title">Produk Kami</h2>
     <div class="home-bestseller-grid">
         @foreach ($products as $product)
             <div class="home-bestseller-card">
                 <img src="{{ \Illuminate\Support\Facades\Storage::url($product->image) }}" alt="{{ $product->name }}">
                 <div class="card-body">
-                    <a href="{{ route('product.productdetails', ['id' => $product->id]) }}" class="btn-explore">Explore</a>
+                    <a href="{{ route('product.productdetails', ['id' => $product->id]) }}" class="btn-explore">Telusuri</a>
                     <h4>{{ $product->name }}</h4>
                 </div>
             </div>

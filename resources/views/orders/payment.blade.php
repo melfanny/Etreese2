@@ -1,7 +1,8 @@
 @extends('layouts.app_order_users')
+
 <style>
     .payment-body {
-        background-color: #d2997a;
+        background-color: #EBC4AE;
         width: 100%;
         min-height: 100%;
         padding: 0;
@@ -61,49 +62,29 @@
         font-size: 14px;
     }
 
-    .payment-info select {
-        border-radius: 12px;
-        width: 100px;
-        padding: 4px 8px;
-        font-size: 12px;
-        height: 28px;
-        border: 1px solid #ccc;
-        background-color: #fff;
-        appearance: none;
-        cursor: pointer;
-    }
-
     .payment-summary {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-start;
         background-color: #fbe7d0;
         padding: 20px;
         border-radius: 8px;
         margin-top: 10px;
-    }
-
-    .summary-row {
-        margin-bottom: 12px;
-        font-size: 16px;
+        flex-wrap: wrap;
+        gap: 20px;
     }
 
     .summary-total {
         font-size: 20px;
         font-weight: bold;
         color: #333;
-        margin-bottom: 0;
+        margin-bottom: 8px;
     }
 
-    .summary-select {
-        padding: 6px 12px;
-        border-radius: 8px;
-        border: 1px solid #ccc;
-        font-size: 14px;
-        width: 150px;
-        appearance: none;
-        cursor: pointer;
-        background-color: #fff;
+    .proceed-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
     }
 
     .proceed-payment-btn {
@@ -141,79 +122,83 @@
                             class="payment-image" />
                         <div class="payment-details">
                             <h3 class="payment-title">{{ $item['product_name'] }}</h3>
-                            <p class="payment-info">Size: {{ $item['size'] ?? 'N/A' }}</p>
-                            <p class="payment-info">Color: {{ $item['color'] ?? 'N/A' }}</p>
+                            <p class="payment-info">Ukuran: {{ $item['size'] ?? 'N/A' }}</p>
+                            <p class="payment-info">Warna: {{ $item['color'] ?? 'N/A' }}</p>
                             <p class="payment-info">Qty: {{ $item['quantity'] }}</p>
-                            <p class="payment-info">Price: Rp {{ number_format($item['price'], 0, ',', '.') }}</p>
+                            <p class="payment-info">Harga: Rp {{ number_format($item['price'], 0, ',', '.') }}</p>
                         </div>
                     </div>
                 @endforeach
 
                 <div class="payment-summary">
-                    <div class="summary-total">Total: Rp {{ number_format($totalPrice, 0, ',', '.') }}</div>
-                    <div class="payment-info">Shipping Method: <b>{{ $order->shipping_method ?? 'N/A' }}</b></div>
-                    <div class="payment-info">Payment Method: <b>{{ $order->payment_method ?? 'N/A' }}</b></div>
-                    <form action="{{ route('order.pay', $order) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="proceed-payment-btn">Bayar Sekarang (Simulasi)</button>
-                    </form>
+                    <div>
+                        <div class="summary-total">Total: Rp {{ number_format($totalPrice, 0, ',', '.') }}</div>
+                        <div class="payment-info">Metode Pengiriman: <b>{{ $order->shipping_method ?? 'N/A' }}</b></div>
+                        <div class="payment-info">Metode Pembayaran: <b>{{ $order->payment_method ?? 'N/A' }}</b></div>
+                    </div>
+
+                    <div class="proceed-buttons">
+                        <form action="{{ route('order.pay', $order) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="proceed-payment-btn">Bayar Sekarang (Simulasi)</button>
+                        </form>
+
+                        @if($order->snap_token)
+                            <button id="pay-button" class="proceed-payment-btn">Bayar dengan Midtrans</button>
+                        @endif
+                    </div>
                 </div>
+
             @else
                 <p>No items in the order to pay.</p>
             @endif
         </div>
+
         <!-- Midtrans JS Client -->
-<script src="https://app.sandbox.midtrans.com/snap/snap.js"
-    data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}"></script>
+        <script src="https://app.sandbox.midtrans.com/snap/snap.js"
+            data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}"></script>
 
-<!-- Tombol trigger pembayaran Snap -->
-@if($order->snap_token)
-    <div style="margin-top: 20px;">
-        <button id="pay-button" class="proceed-payment-btn">Bayar dengan Midtrans</button>
-    </div>
-
-    <pre id="result-json" style="padding: 10px; background-color: #fff; border-radius: 8px; margin-top: 10px;"></pre>
-
-    <script>
-        const payBtn = document.getElementById('pay-button');
-        if (payBtn) {
-            payBtn.addEventListener('click', function () {
-                fetch('{{ route('order.getSnapToken', $order->id) }}')
-                    .then(res => {
-                        if (!res.ok) throw new Error('Gagal ambil snap token');
-                        return res.json();
-                    })
-                    .then(data => {
-                        if (!data.snap_token) {
-                            alert('Token pembayaran tidak tersedia.');
-                            return;
-                        }
-
-                        window.snap.pay(data.snap_token, {
-                            onSuccess: function (result) {
-                                document.getElementById('result-json').textContent = JSON.stringify(result, null, 2);
-                                alert("Pembayaran berhasil!");
-                            },
-                            onPending: function (result) {
-                                document.getElementById('result-json').textContent = JSON.stringify(result, null, 2);
-                                alert("Pembayaran tertunda.");
-                            },
-                            onError: function (result) {
-                                document.getElementById('result-json').textContent = JSON.stringify(result, null, 2);
-                                alert("Pembayaran gagal.");
-                            },
-                            onClose: function () {
-                                alert("Anda menutup popup pembayaran.");
+        <!-- Snap Payment Script -->
+        <script>
+            const payBtn = document.getElementById('pay-button');
+            if (payBtn) {
+                payBtn.addEventListener('click', function () {
+                    fetch('{{ route('order.getSnapToken', $order->id) }}')
+                        .then(res => {
+                            if (!res.ok) throw new Error('Gagal ambil snap token');
+                            return res.json();
+                        })
+                        .then(data => {
+                            if (!data.snap_token) {
+                                alert('Token pembayaran tidak tersedia.');
+                                return;
                             }
+
+                            window.snap.pay(data.snap_token, {
+                                onSuccess: function (result) {
+                                    document.getElementById('result-json').textContent = JSON.stringify(result, null, 2);
+                                    alert("Pembayaran berhasil!");
+                                },
+                                onPending: function (result) {
+                                    document.getElementById('result-json').textContent = JSON.stringify(result, null, 2);
+                                    alert("Pembayaran tertunda.");
+                                },
+                                onError: function (result) {
+                                    document.getElementById('result-json').textContent = JSON.stringify(result, null, 2);
+                                    alert("Pembayaran gagal.");
+                                },
+                                onClose: function () {
+                                    alert("Anda menutup popup pembayaran.");
+                                }
+                            });
+                        })
+                        .catch(err => {
+                            alert("Terjadi kesalahan: " + err.message);
+                            console.error(err);
                         });
-                    })
-                    .catch(err => {
-                        alert("Terjadi kesalahan: " + err.message);
-                        console.error(err);
-                    });
-            });
-        }
-    </script>
-@endif
+                });
+            }
+        </script>
+        @include('layouts.footer')
     </div>
 @endsection

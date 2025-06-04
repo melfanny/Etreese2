@@ -127,7 +127,7 @@
             </div>
             <div class="content-container">
                 <div class="box">
-                    <div class="heading">We Are Etreese</div>
+                    <div class="heading">Kami Adalah Etreese</div>
                     <div class="text">
                         Etreese - UMKM fesyen inovatif yang menghadirkan kolaborasi sempurna antara modernitas dan
                         kekayaan

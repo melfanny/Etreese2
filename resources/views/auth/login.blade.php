@@ -211,7 +211,7 @@
         <div class="form-container">
             <!-- Form content centered -->
             <div class="form-content">
-                <div class="form-title">Welcome back!</div>
+                <div class="form-title">Selamat datang kembali!</div>
                 <x-auth-session-status class="mb-4" :status="session('status')" />
                 <form method="POST" action="{{ route('login') }}" class="form-box">
                     @csrf
@@ -234,22 +234,22 @@
                     <!-- Forgot Password Link -->
                     <div class="forgot-password">
                         @if (Route::has('password.request'))
-                            <a href="{{ route('password.request') }}">Forgot your password?</a>
+                            <a href="{{ route('password.request') }}">Lupa password?</a>
                         @endif
                     </div>
 
                     <!-- Remember Me -->
                     <div class="remember-me">
                         <input id="remember_me" type="checkbox" name="remember">
-                        <span>Remember me</span>
+                        <span>Ingat saya</span>
                     </div>
 
                     <!-- Submit Button -->
-                    <button type="submit" class="submit-button">Log in</button>
+                    <button type="submit" class="submit-button">Masuk</button>
 
                     <!-- Don't have an account link -->
                     <div class="register-link">
-                        <a href="{{ route('register') }}">Don't have an account? Click here!</a>
+                        <a href="{{ route('register') }}">Tidak mempunyai akun? Klik disini!</a>
                     </div>
                 </form>
             </div>

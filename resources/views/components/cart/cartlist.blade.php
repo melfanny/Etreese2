@@ -190,7 +190,7 @@
                     <input type="hidden" name="cart_ids[]" id="selectedCartIds">
                     <button type="submit" class="remove-button">
                         <img src="{{ asset('images/trashlogo.png') }}" alt="Trash Icon">
-                        <span>Remove</span>
+                        <span>Hapus</span>
                     </button>
                 </form>
             </div>

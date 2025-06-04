@@ -2,6 +2,7 @@
     .product-detail-section {
         padding: 40px;
         background-color: #EBC4AE;
+        width: 100%;
     }
 
     .product-container {
@@ -140,7 +141,7 @@
 
     .stock-text {
         font-size: 15px;
-        color: #666666;
+        color: #000;
     }
 
     .stock-text:has(+ .disabled) {
@@ -156,7 +157,7 @@
             <section class="price-cart-row">
                 <div>
                     <!-- Harga Produk (ambil dari database langsung) -->
-                    <label class="section-label price-cart">Price:</label>
+                    <label class="section-label price-cart">Harga:</label>
                     <span class="price-value">Rp{{ number_format($product->price, 0, ',', '.') }}</span>
                 </div>
                 <!-- Direct ke page cart ketika menekan tombol cart untuk menambahkan produk ke cart -->
@@ -173,14 +174,14 @@
         <!-- Informasi Produk (ambil dari database) -->
         <div class="product-description">
             <div>
-                <label class="section-label">Product name</label>
+                <label class="section-label">Nama Produk</label>
                 <div class="product-summary">
                     <h2>{{ $product->name }}</h2>
                 </div>
             </div>
 
             <div>
-                <label class="section-label">Description</label>
+                <label class="section-label">Deskripsi Produk</label>
                 <div class="product-summary">
                     <h2>{{ $product->deskripsi }}</h2>
                 </div>
@@ -189,7 +190,7 @@
             <!-- Ukuran dan Stok Produk -->
             <section class="product-options">
                 <div class="option-group">
-                    <label class="section-label">Size</label>
+                    <label class="section-label">Ukuran</label>
                     @foreach ($product->sizes as $size)
                         @php
                             $stockQty = $product->stocks->where('size_id', $size->id)->first()->quantity ?? 0;
@@ -206,13 +207,12 @@
 
                 <!-- Warna Produk (ambil dari database langsung) -->
                 <div class="option-group">
-                    <label class="section-label">Color:</label>
+                    <label class="section-label">Warna</label>
                     @foreach ($product->colors as $color)
                         <div class="product-summary">{{ $color->name }}</div>
                     @endforeach
                 </div>
         </div>
-    </div>
     </div>
 </section>
 

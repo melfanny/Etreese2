@@ -95,12 +95,11 @@
 
 <body>
     <div class="about-why-container">
-        <h2 class="about-why-title">WHY ETREESE?</h2>
+        <h2 class="about-why-title">KENAPA ETREESE?</h2>
         <div class="about-why-cards">
             <div class="about-why-card">
                 <div class="about-why-icon">
-                    <img src="/images/rafflesia hitam.png"
-                        alt="Indonesia Asset">
+                    <img src="/images/rafflesia hitam.png" alt="Indonesia Asset">
                 </div>
                 <h3 class="about-why-heading">Indonesia Asset</h3>
                 <p class="about-why-text">
@@ -110,8 +109,7 @@
             </div>
             <div class="about-why-card">
                 <div class="about-why-icon">
-                    <img src="/images/melati hitam.png"
-                        alt="Eco Friendly">
+                    <img src="/images/melati hitam.png" alt="Eco Friendly">
                 </div>
                 <h3 class="about-why-heading">Eco Friendly</h3>
                 <p class="about-why-text">

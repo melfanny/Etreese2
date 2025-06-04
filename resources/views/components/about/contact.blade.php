@@ -53,13 +53,18 @@
         border-radius: 6px;
         padding: 5px;
     }
+
+    body p {
+        color: white;
+
+    }
 </style>
 
 <body>
     <div class="about-contact-section">
         <h2 class="about-contact-title">CONTACT US!</h2>
         <p class="about-contact-description">
-            Let’s connect! Drop us a message, and we’ll get back to you as soon as possible.
+            Kirimkan pesan kepada kami, dan kami akan segera menghubungi Anda.
         </p>
 
         @auth
@@ -80,7 +85,7 @@
                 <button type="submit" class="about-contact-button">SEND</button>
             </form>
         @else
-            <p>Please <a href="{{ route('login') }}">login</a> to send a message.</p>
+            <p>Harap <a href="{{ route('login') }}">melakukan login</a> untuk kirim pesan.</p>
         @endauth
     </div>
 </body>

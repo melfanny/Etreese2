@@ -1,7 +1,7 @@
 @extends('layouts.app_order_users')
 <style>
     .order-container {
-        background-color: #d2997a;
+        background-color: #EBC4AE;
     }
 
     .order-overview-container {
@@ -291,23 +291,23 @@
             <div class="overview-stats">
                 <a href="{{ route('order.myorders', ['status' => 'waiting_payment']) }}"
                     class="stat-card {{ $status === 'waiting_payment' ? 'active' : '' }}">
-                    <span class="stat-label">Waiting Payment</span>
+                    <span class="stat-label">Menunggu Pembayaran</span>
                 </a>
                 <a href="{{ route('order.myorders', ['status' => 'paid']) }}"
                     class="stat-card {{ $status === 'paid' ? 'active' : '' }}">
-                    <span class="stat-label">Paid</span>
+                    <span class="stat-label">Sudah Bayar</span>
                 </a>
                 <a href="{{ route('order.myorders', ['status' => 'processed']) }}"
                     class="stat-card {{ $status === 'processed' ? 'active' : '' }}">
-                    <span class="stat-label">Processed</span>
+                    <span class="stat-label">Sedang Proses</span>
                 </a>
                 <a href="{{ route('order.myorders', ['status' => 'shipped']) }}"
                     class="stat-card {{ $status === 'shipped' ? 'active' : '' }}">
-                    <span class="stat-label">Shipped</span>
+                    <span class="stat-label">Dikirim</span>
                 </a>
                 <a href="{{ route('order.myorders', ['status' => 'completed']) }}"
                     class="stat-card {{ $status === 'completed' ? 'active' : '' }}">
-                    <span class="stat-label">Completed</span>
+                    <span class="stat-label">Selesai</span>
                 </a>
             </div>
 
