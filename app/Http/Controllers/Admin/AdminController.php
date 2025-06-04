@@ -54,7 +54,7 @@ class AdminController extends Controller
         }
 
         $period = $request->get('period', 'week'); // Default to week if not specified
-        
+
         // Get all completed orders for the period
         $orders = Order::where('status', 'completed')
             ->when($period === 'week', function ($q) {
@@ -83,9 +83,9 @@ class AdminController extends Controller
 
         foreach ($products as $product) {
             // Get all items for this product from all orders
-            $productItems = $orders->flatMap(function($order) use ($product) {
+            $productItems = $orders->flatMap(function ($order) use ($product) {
                 return collect($order->checkout_data)
-                    ->filter(function($item) use ($product) {
+                    ->filter(function ($item) use ($product) {
                         return $item['product_id'] == $product->id;
                     });
             });
@@ -93,16 +93,16 @@ class AdminController extends Controller
             if ($productItems->isNotEmpty()) {
                 // Calculate total sales and income for this product
                 $totalSold = $productItems->sum('quantity');
-                $totalIncome = $productItems->sum(function($item) {
+                $totalIncome = $productItems->sum(function ($item) {
                     return $item['price'] * $item['quantity'];
                 });
 
                 // Get variant sales details
                 $variantSales = $productItems
-                    ->groupBy(function($item) {
+                    ->groupBy(function ($item) {
                         return ($item['color'] ?? 'Unknown') . '|' . ($item['size'] ?? 'Unknown');
                     })
-                    ->map(function($items) {
+                    ->map(function ($items) {
                         return [
                             'color' => $items->first()['color'] ?? 'Unknown',
                             'size' => $items->first()['size'] ?? 'Unknown',
@@ -113,38 +113,38 @@ class AdminController extends Controller
                     ->values();
 
                 // Calculate period sales
-                $weekSold = $orders->filter(function($order) {
+                $weekSold = $orders->filter(function ($order) {
                     return $order->created_at->between(
                         Carbon::now()->startOfWeek(),
                         Carbon::now()->endOfWeek()
                     );
-                })->flatMap(function($order) use ($product) {
+                })->flatMap(function ($order) use ($product) {
                     return collect($order->checkout_data)
-                        ->filter(function($item) use ($product) {
+                        ->filter(function ($item) use ($product) {
                             return $item['product_id'] == $product->id;
                         });
                 })->sum('quantity');
 
-                $monthSold = $orders->filter(function($order) {
+                $monthSold = $orders->filter(function ($order) {
                     return $order->created_at->between(
                         Carbon::now()->startOfMonth(),
                         Carbon::now()->endOfMonth()
                     );
-                })->flatMap(function($order) use ($product) {
+                })->flatMap(function ($order) use ($product) {
                     return collect($order->checkout_data)
-                        ->filter(function($item) use ($product) {
+                        ->filter(function ($item) use ($product) {
                             return $item['product_id'] == $product->id;
                         });
                 })->sum('quantity');
 
-                $yearSold = $orders->filter(function($order) {
+                $yearSold = $orders->filter(function ($order) {
                     return $order->created_at->between(
                         Carbon::now()->startOfYear(),
                         Carbon::now()->endOfYear()
                     );
-                })->flatMap(function($order) use ($product) {
+                })->flatMap(function ($order) use ($product) {
                     return collect($order->checkout_data)
-                        ->filter(function($item) use ($product) {
+                        ->filter(function ($item) use ($product) {
                             return $item['product_id'] == $product->id;
                         });
                 })->sum('quantity');

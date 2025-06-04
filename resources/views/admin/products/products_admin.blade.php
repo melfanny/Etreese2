@@ -2,6 +2,10 @@
 
 @section('content')
     <style>
+        .products-admin-container {
+            background-color: #e5c7b0;
+        }
+
         .dashboard-container {
             padding: 50px 10%;
             font-family: 'Cormorant Garamond', serif;
@@ -31,19 +35,34 @@
         }
 
         .product-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: flex-start;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            width: 100%;
         }
 
+        @media (max-width: 1100px) {
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 700px) {
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+
         .product-card {
-            width: 500px;
-            background-color: #EBC4AE;
+            width: 100%;
             border-radius: 10px;
             overflow: hidden;
             text-align: center;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .product-card img {
@@ -70,7 +89,7 @@
 
 
         .product-name {
-            background-color: #EBC4AE;
+            background-color: #F3E5D7;
             color: #65141d;
             padding: 10px;
             font-weight: bold;
@@ -81,7 +100,7 @@
             display: flex;
             justify-content: space-around;
             padding: 10px;
-            background-color: #EBC4AE;
+            background-color: #F3E5D7;
             align-items: left;
         }
 
@@ -109,12 +128,11 @@
             background-color: #b52b27;
         }
     </style>
-
-    <div class="dashboard-container">
-        <div class="dashboard-header">
-            <a href="{{ route('admin.products.create') }}" class="add-button">+ Add New</a>
-        </div>
-        <div class="product-grid">
+    <div class="products-admin-container">
+        <div class="dashboard-container">
+            <div class="dashboard-header">
+                <a href="{{ route('admin.products.create') }}" class="add-button">+ Tambah Produk Baru</a>
+            </div>
             <div class="product-grid">
                 @foreach ($products as $product)
                     <div class="product-card">
@@ -138,13 +156,14 @@
                                 style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus produk ini?')">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="delete-btn"><i class="fas fa-trash"></i> Delete</button>
+                                <button type="submit" class="delete-btn"><i class="fas fa-trash"></i> Hapus</button>
                             </form>
                         </div>
                     </div>
                 @endforeach
             </div>
         </div>
+    </div>
     </div>
     @include('layouts.footer')
     </div>

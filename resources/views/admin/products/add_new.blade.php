@@ -118,7 +118,7 @@
                 <div class="product-form-grid">
                     <div class="product-image-upload">
                         <img id="preview-image" src="#" alt="Preview">
-                        <span class="image-placeholder">Insert Image</span>
+                        <span class="image-placeholder">Tambah Gambar</span>
                         <input type="file" name="image" id="image" accept="image/*">
                     </div>
 
@@ -258,6 +258,4 @@
             });
         </script>
     @endif
-
-
 @endsection

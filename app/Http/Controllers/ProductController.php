@@ -213,7 +213,7 @@ class ProductController extends Controller
             DB::commit();
 
             // Untuk create
-            return redirect()->route('admin.products.create')->with('success', 'Produk berhasil dibuat.');
+            return redirect()->route('admin.products.products_admin')->with('success', 'Produk berhasil dibuat.');
 
         } catch (\Exception $e) {
             DB::rollBack();

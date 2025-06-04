@@ -2,6 +2,10 @@
 
 @section('content')
     <style>
+        .sales-container {
+            background-color: #EBC4AE;
+        }
+
         .dashboard-container {
             padding: 32px 32px;
             max-width: 1400px;
@@ -49,8 +53,9 @@
 
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            width: 100%;
         }
 
         .product-card {
@@ -65,8 +70,10 @@
             position: relative;
             display: flex;
             flex-direction: column;
-            max-width: 320px;
-            margin: 0 auto;
+            width: 100%;
+            min-width: 0;
+            max-width: 100%;
+            align-items: center;
         }
 
         .product-card:hover {
@@ -76,13 +83,13 @@
 
         .img-wrapper {
             width: 100%;
+            max-width: 160px;
             aspect-ratio: 1/1;
             background: #f3e5d7;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            max-width: 200px;
             margin: 0 auto;
         }
 
@@ -161,70 +168,62 @@
             font-weight: bold;
         }
 
-        @media (max-width: 700px) {
-            .dashboard-header {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 10px;
+        @media (max-width: 1200px) {
+            .product-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .product-grid {
+                grid-template-columns: 1fr;
             }
 
-            .dashboard-header h2 {
-                font-size: 1.3rem;
+            .img-wrapper {
+                max-width: 100%;
             }
         }
     </style>
-
-    <div class="dashboard-container">
-        <div class="dashboard-header">
-            <h2>Sales Dashboard</h2>
-            <div class="filter-group">
-                <a href="{{ route('admin.sales', ['period' => 'week']) }}" 
-                   class="filter-btn {{ $currentPeriod === 'week' ? 'active' : '' }}">Week</a>
-                <a href="{{ route('admin.sales', ['period' => 'month']) }}" 
-                   class="filter-btn {{ $currentPeriod === 'month' ? 'active' : '' }}">Month</a>
-                <a href="{{ route('admin.sales', ['period' => 'year']) }}" 
-                   class="filter-btn {{ $currentPeriod === 'year' ? 'active' : '' }}">Year</a>
+    <div class="sales-container">
+        <div class="dashboard-container">
+            <div class="dashboard-header">
+                <h2>Rekap Penjualan</h2>
             </div>
-        </div>
-        <div class="product-grid">
-            @foreach($salesData as $product)
-            <div class="product-card">
-                <div class="img-wrapper">
-                    <img src="{{ asset('storage/' . $product['image']) }}" alt="{{ $product['name'] }}">
-                </div>
-                <h3>{{ $product['name'] }}</h3>
-                <div class="period-stats">
-                    <div class="period-box">
-                        <span class="stat-label">Week:</span>
-                        <span class="stat-value">{{ $product['week_sold'] }} sold</span>
+            <div class="product-grid">
+                @foreach($salesData as $product)
+                    <div class="product-card">
+                        <div class="img-wrapper">
+                            <img src="{{ asset('storage/' . $product['image']) }}" alt="{{ $product['name'] }}">
+                        </div>
+                        <h3>{{ $product['name'] }}</h3>
+                        <div class="period-box" style="margin-bottom:8px;">
+                            <span class="stat-label">Total Pembelian:</span>
+                            <span class="stat-value">{{ $product['total_sales'] }} produk</span>
+                        </div>
+                        <div class="price">Pemasukan: Rp{{ number_format($product['total_income'], 0, ',', '.') }}</div>
+                        <div class="product-details">
+                            <b>Detail:</b>
+                            <ul style="list-style: none; padding-left: 0; margin-top: 8px;">
+                                @foreach($product['variant_details'] as $variant)
+                                    @if($variant === '')
+                                        <li style="margin: 4px 0;"></li>
+                                    @elseif(strpos($variant, '<b>') === 0)
+                                        <li style="margin: 8px 0 4px 0; color: #884F22;">{!! $variant !!}</li>
+                                    @else
+                                        <li style="margin: 2px 0; color: #b36b2c;">{!! $variant !!}</li>
+                                    @endif
+                                @endforeach
+                            </ul>
+                        </div>
                     </div>
-                    <div class="period-box">
-                        <span class="stat-label">Month:</span>
-                        <span class="stat-value">{{ $product['month_sold'] }} sold</span>
-                    </div>
-                    <div class="period-box">
-                        <span class="stat-label">Year:</span>
-                        <span class="stat-value">{{ $product['year_sold'] }} sold</span>
-                    </div>
-                </div>
-                <div class="price">Income: Rp{{ number_format($product['total_income'], 0, ',', '.') }}</div>
-                <div class="qty">Total Sales: {{ $product['total_sales'] }}</div>
-                <div class="product-details">
-                    <b>Details:</b>
-                    <ul style="list-style: none; padding-left: 0; margin-top: 8px;">
-                        @foreach($product['variant_details'] as $variant)
-                            @if($variant === '')
-                                <li style="margin: 4px 0;"></li>
-                            @elseif(strpos($variant, '<b>') === 0)
-                                <li style="margin: 8px 0 4px 0; color: #884F22;">{!! $variant !!}</li>
-                            @else
-                                <li style="margin: 2px 0; color: #b36b2c;">{!! $variant !!}</li>
-                            @endif
-                        @endforeach
-                    </ul>
-                </div>
+                @endforeach
             </div>
-            @endforeach
         </div>
     </div>
     @include('layouts.footer')

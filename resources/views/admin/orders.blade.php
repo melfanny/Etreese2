@@ -1,5 +1,4 @@
 @extends('layouts.app_admin')
-
 @section('content')
     <style>
         .order-container {
@@ -144,16 +143,16 @@
 
         .order-list {
             display: flex;
-            flex-direction: column; /* Stack ke bawah */
-            gap: 20px; /* Jarak antar order */
+            flex-direction: column;
+            gap: 20px;
             padding: 20px;
             max-width: 900px;
-            margin: 0 auto; /* Tengah */
+            margin: 0 auto;
         }
 
         .order-card {
             display: flex;
-            background-color: #E2E2E2;
+            background-color: #FFFBEF;
             padding: 20px;
             border-radius: 10px;
             align-items: flex-start;
@@ -162,23 +161,22 @@
             box-sizing: border-box;
         }
 
-        .order-card:hover {
-            box-shadow: 0 8px 28px rgba(136, 79, 34, 0.18), 0 2px 8px #e5c7b0;
-            transform: translateY(-4px) scale(1.02);
-            border-color: #b36b2c;
+        .product-thumb {
+            width: 150px;
+            height: auto;
+            border-radius: 10px;
+            background-color: white;
+            padding: 10px;
         }
 
-        .product-thumb {
-           width: 150px;
-    height: auto;
-    border-radius: 10px;
-    background-color: white;
-    padding: 10px;
+        .product-thumb.scrollable {
+            overflow-y: auto;
+            max-height: 300px;
         }
 
         .order-info {
             flex: 1;
-    font-family: 'Poppins', sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
 
         .order-info h2 {
@@ -193,12 +191,12 @@
         }
 
         .order-status {
-           display: inline-block;
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    margin-top: 10px;
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 10px;
         }
 
         .status-waiting_payment {
@@ -208,34 +206,34 @@
 
         .status-paid {
             background-color: #ffc107;
-    color: #000;
+            color: #000;
         }
 
         .status-processed {
             background-color: #0d6efd;
-    color: white;
+            color: white;
         }
 
         .status-shipped {
-       background-color: #20c997;
-    color: white;
+            background-color: #20c997;
+            color: white;
         }
 
         .status-completed {
-          background-color: #6c757d;
-    color: white;
+            background-color: #6c757d;
+            color: white;
         }
 
         .order-actions {
-          margin-top: 15px;
+            margin-top: 15px;
         }
 
         .order-actions .btn {
-              padding: 6px 12px;
-    font-size: 0.85rem;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
         }
 
         .order-actions .btn-warning {
@@ -289,11 +287,10 @@
     <div class="order-container">
         <div class="order-overview-container">
             <div class="overview-header">
-                <div class="overview-title">Order Overview</div>
+                <div class="overview-title">Pesanan Masuk</div>
                 <div class="overview-search">
                     <form method="GET" action="{{ route('admin.orders') }}">
-                        <input type="text" name="q" value="{{ request('q') }}"
-                            placeholder="Cari order, customer, atau ID...">
+                        <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari disini...">
                         <button type="submit" class="search-btn">
                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24">
                                 <circle cx="11" cy="11" r="7" stroke="#884F22" stroke-width="2" />
@@ -307,79 +304,125 @@
                 <a href="{{ route('admin.orders', ['status' => null]) }}"
                     class="stat-card {{ request('status') === null ? 'active' : '' }}">
                     <span class="stat-label {{ request('status') === null ? 'active' : '' }}">
-                        Total Orders
+                        Total Pesanan
                     </span>
                     <span class="stat-value">{{ $totalOrders }}</span>
                 </a>
                 <a href="{{ route('admin.orders', ['status' => 'waiting_payment']) }}"
                     class="stat-card {{ request('status') === 'waiting_payment' ? 'active' : '' }}">
                     <span class="stat-label {{ request('status') === 'waiting_payment' ? 'active' : '' }}">
-                        Waiting Payment
+                        Menunggu Pembayaran
                     </span>
                     <span class="stat-value">{{ $waitingPayment }}</span>
                 </a>
                 <a href="{{ route('admin.orders', ['status' => 'paid']) }}"
                     class="stat-card {{ request('status') === 'paid' ? 'active' : '' }}">
                     <span class="stat-label {{ request('status') === 'paid' ? 'active' : '' }}">
-                        Confirmation
+                        Konfirmasi
                     </span>
                     <span class="stat-value">{{ $paid }}</span>
                 </a>
                 <a href="{{ route('admin.orders', ['status' => 'processed']) }}"
                     class="stat-card {{ request('status') === 'processed' ? 'active' : '' }}">
                     <span class="stat-label {{ request('status') === 'processed' ? 'active' : '' }}">
-                        Processed
+                        Diproses
                     </span>
                     <span class="stat-value">{{ $processed }}</span>
                 </a>
                 <a href="{{ route('admin.orders', ['status' => 'shipped']) }}"
                     class="stat-card {{ request('status') === 'shipped' ? 'active' : '' }}">
                     <span class="stat-label {{ request('status') === 'shipped' ? 'active' : '' }}">
-                        Shipped
+                        Dikirim
                     </span>
                     <span class="stat-value">{{ $shipped }}</span>
                 </a>
                 <a href="{{ route('admin.orders', ['status' => 'completed']) }}"
                     class="stat-card {{ request('status') === 'completed' ? 'active' : '' }}">
                     <span class="stat-label {{ request('status') === 'completed' ? 'active' : '' }}">
-                        Completed
+                        Selesai
                     </span>
                     <span class="stat-value">{{ $completed }}</span>
                 </a>
             </div>
             <div class="order-list">
                 @forelse($orders as $order)
-                    <div class="order-card">
-                        <img src="{{ $order->product && $order->product->image ? asset('storage/' . $order->product->image) : asset('images/sample-product.jpg') }}"
-                            alt="Product" class="product-thumb">
-                        <div class="order-info">
-                            <h2>Order #{{ $order->id }}</h2>
-                            <p><b>Customer:</b> {{ $order->user->name ?? '-' }}</p>
-                            <p><b>Date:</b> {{ $order->created_at->format('Y-m-d') }}</p>
-                            <p><b>Total:</b> Rp{{ number_format($order->total, 0, ',', '.') }}</p>
-                            <span class="order-status status-{{ $order->status }}">
-                                {{ ucfirst(str_replace('_', ' ', $order->status)) }}
-                            </span>
-                            <div class="order-actions">
-                                @if($order->status == 'paid')
-                                    <form action="{{ route('admin.orders.confirm', $order) }}" method="POST"
-                                        style="display:inline;">
-                                        @csrf
-                                        <button class="btn btn-warning btn-sm">Processed (Packing)</button>
-                                    </form>
-                                @elseif($order->status == 'processed')
-                                    <form action="{{ route('admin.orders.ship', $order) }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        <button class="btn btn-primary btn-sm">Shipping</button>
-                                    </form>
-                                @elseif($order->status == 'shipped')
-                                    <span class="badge bg-success">Menunggu User Complete</span>
-                                @elseif($order->status == 'completed')
-                                    <span class="badge bg-secondary">Selesai</span>
-                                @endif
+                        <div class="order-card">
+                            @if(isset($order->checkout_data) && count($order->checkout_data) > 0)
+                                <div class="product-thumb scrollable">
+                                    @foreach($order->checkout_data as $item)
+                                        <img src="{{ asset('storage/' . $item['image']) }}" alt="{{ $item['product_name'] }}"
+                                            class="product-thumb" style="margin-bottom: 10px;">
+                                    @endforeach
+                                </div>
+                            @else
+                                <img src="{{ $order->product && $order->product->image ? asset('storage/' . $order->product->image) : asset('images/sample-product.jpg') }}"
+                                    class="product-thumb">
+                            @endif
+
+                            <div class="order-info">
+                                <h2>Pesanan #{{ $order->id }}</h2>
+                                <p><b>Pelanggan:</b> {{ $order->user->name ?? '-' }}</p>
+                                <p><b>Tanggal:</b> {{ $order->created_at->format('Y-m-d') }}</p>
+                                <p><b>Total:</b> Rp{{ number_format($order->total, 0, ',', '.') }}</p>
+                                <div style="margin: 8px 0 12px 0;">
+                                    <b>Status:</b>
+                                    <span class="order-status status-{{ $order->status }}">
+                                        {{ $order->status === 'waiting_payment' ? 'Menunggu Pembayaran' :
+                    ($order->status === 'paid' ? 'Dibayar' :
+                        ($order->status === 'processed' ? 'Diproses' :
+                            ($order->status === 'shipped' ? 'Dikirim' :
+                                ($order->status === 'completed' ? 'Selesai' : ucfirst(str_replace('_', ' ', $order->status)))
+                            ))) }}
+                                    </span>
+                                </div>
+                                <div style="margin-top:12px;">
+                                    <b>Detail Produk:</b>
+                                    @if(isset($order->checkout_data) && count($order->checkout_data) > 0)
+                                        <ul style="margin: 8px 0 0 0; padding-left: 18px;">
+                                            @foreach($order->checkout_data as $item)
+                                                <li>
+                                                    {{ $item['product_name'] }}
+                                                    @if(!empty($item['color'])) - <span style="color:#b36b2c;">Warna:
+                                                    {{ $item['color'] }}</span>@endif
+                                                    @if(!empty($item['size'])) - <span style="color:#b36b2c;">Ukuran:
+                                                    {{ $item['size'] }}</span>@endif
+                                                    - <span style="color:#884F22;">Jumlah: {{ $item['quantity'] }}</span>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    @else
+                                        <ul style="margin: 8px 0 0 0; padding-left: 18px;">
+                                            <li>
+                                                {{ $order->product->name ?? '-' }}
+                                                @if(!empty($order->color)) - <span style="color:#b36b2c;">Warna:
+                                                {{ $order->color }}</span>@endif
+                                                @if(!empty($order->size)) - <span style="color:#b36b2c;">Ukuran:
+                                                {{ $order->size }}</span>@endif
+                                                - <span style="color:#884F22;">Kuantitas: {{ $order->quantity ?? 1 }}</span>
+                                            </li>
+                                        </ul>
+                                    @endif
+                                </div>
+                                <div class="order-actions">
+                                    @if($order->status == 'paid')
+                                        <form action="{{ route('admin.orders.confirm', $order) }}" method="POST"
+                                            style="display:inline;">
+                                            @csrf
+                                            <button class="btn btn-warning btn-sm">Proses (Dikemas)</button>
+                                        </form>
+                                    @elseif($order->status == 'processed')
+                                        <form action="{{ route('admin.orders.ship', $order) }}" method="POST" style="display:inline;">
+                                            @csrf
+                                            <button class="btn btn-primary btn-sm">Kirim</button>
+                                        </form>
+                                    @elseif($order->status == 'shipped')
+                                        <span class="badge bg-success">Menunggu Konfirmasi Selesai</span>
+                                    @elseif($order->status == 'completed')
+                                        <span class="badge bg-secondary">Pesanan Selesai</span>
+                                    @endif
+                                </div>
                             </div>
                         </div>
-                    </div>
                 @empty
                     <div style="grid-column: 1/-1; text-align:center; color:#884F22; font-size:1.1rem;">
                         Belum ada order.

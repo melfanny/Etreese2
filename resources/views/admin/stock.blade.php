@@ -4,6 +4,7 @@
         .dashboard-container {
             padding: 50px 10%;
             font-family: 'Cormorant Garamond', serif;
+            background-color: #e5c7b0;
         }
 
         .dashboard-header {
@@ -20,14 +21,16 @@
         }
 
         .product-grid {
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
             gap: 24px;
-            justify-content: flex-start;
+            width: 100%;
+            justify-items: stretch;
         }
 
         .product-card {
-            width: 420px;
+            width: 100%;
+            max-width: 100%;
             background: linear-gradient(120deg, #fff7f0 60%, #f3e5d7 100%);
             border-radius: 14px;
             overflow: hidden;
@@ -38,6 +41,12 @@
             margin-bottom: 10px;
             border: 1.5px solid #e5c7b0;
             padding-bottom: 18px;
+        }
+
+        @media (max-width: 900px) {
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .img-wrapper {
@@ -298,7 +307,7 @@
 
     <div class="dashboard-container">
         <div class="dashboard-header">
-            <h2>Stock Management</h2>
+            <h2>Kelola Limit Stok</h2>
         </div>
         @if($stockLimitAlerts->isNotEmpty())
             <div class="alert-warning">
@@ -376,7 +385,8 @@
                                     <span class="stock-info">{{ $sizeName }} Stock: <b>{{ $currentStock }}</b></span>
                                     @if($isLowStock)
                                         <div class="stock-alert {{ $alertClass }}">
-                                            <i class="fas {{ $currentStock == 0 ? 'fa-exclamation-circle' : 'fa-exclamation-triangle' }}"></i>
+                                            <i
+                                                class="fas {{ $currentStock == 0 ? 'fa-exclamation-circle' : 'fa-exclamation-triangle' }}"></i>
                                             {{ $currentStock == 0 ? 'Stok Habis!' : 'Stok Mendekati Batas!' }}
                                         </div>
                                     @endif
@@ -393,7 +403,7 @@
                             </div>
                         @endforeach
                         <button type="submit" class="save-btn">
-                            <i class="fas fa-save"></i> Save
+                            <i class="fas fa-save"></i> Simpan Perubahan
                         </button>
                     </form>
             @endforeach

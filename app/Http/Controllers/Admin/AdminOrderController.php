@@ -83,7 +83,7 @@ class AdminOrderController extends Controller
             'user_id' => $order->user_id,
             'message' => 'Pesanan Anda sedang diproses dan dikemas.'
         ]);
-        
+
         return back()->with('success', 'Order diproses (packing)!');
     }
 
