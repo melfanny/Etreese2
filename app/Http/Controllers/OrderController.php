@@ -135,9 +135,42 @@ class OrderController extends Controller
         if ($order->user_id != Auth::id())
             abort(403);
 
-        $order->update(['status' => 'paid']);
+        DB::beginTransaction();
+        try {
+            // Update order status to paid
+            $order->update(['status' => 'paid']);
 
-        return redirect()->route('order.myorders')->with('success', 'Pembayaran berhasil!');
+            // Update stock for each item in the order
+            foreach ($order->checkout_data as $item) {
+                $product = Product::findOrFail($item['product_id']);
+
+                $color = Color::where('product_id', $product->id)
+                    ->where('name', $item['color'])
+                    ->first();
+
+                $size = Size::where('product_id', $product->id)
+                    ->where('name', $item['size'])
+                    ->first();
+
+                if ($color && $size) {
+                    $stock = Stock::where('product_id', $product->id)
+                        ->where('color_id', $color->id)
+                        ->where('size_id', $size->id)
+                        ->first();
+
+                    if ($stock) {
+                        $newQuantity = max(0, $stock->quantity - $item['quantity']);
+                        $stock->update(['quantity' => $newQuantity]);
+                    }
+                }
+            }
+
+            DB::commit();
+            return redirect()->route('order.myorders')->with('success', 'Pembayaran berhasil!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Terjadi kesalahan saat memproses pembayaran: ' . $e->getMessage());
+        }
     }
 
     // Lihat pesanan user
@@ -165,39 +198,7 @@ class OrderController extends Controller
         if ($order->user_id != Auth::id() || $order->status !== 'shipped')
             abort(403);
 
-        DB::beginTransaction();
-        try {
-            $order->update(['status' => 'completed']);
-
-            foreach ($order->checkout_data as $item) {
-                $product = Product::findOrFail($item['product_id']);
-
-                $color = Color::where('product_id', $product->id)
-                    ->where('name', $item['color'])
-                    ->first();
-
-                $size = Size::where('product_id', $product->id)
-                    ->where('name', $item['size'])
-                    ->first();
-
-                if ($color && $size) {
-                    $stock = Stock::where('product_id', $product->id)
-                        ->where('color_id', $color->id)
-                        ->where('size_id', $size->id)
-                        ->first();
-
-                    if ($stock) {
-                        $newQuantity = max(0, $stock->quantity - $item['quantity']);
-                        $stock->update(['quantity' => $newQuantity]);
-                    }
-                }
-            }
-
-            DB::commit();
-            return back()->with('success', 'Pesanan selesai!');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->with('error', 'Terjadi kesalahan saat menyelesaikan pesanan: ' . $e->getMessage());
-        }
+        $order->update(['status' => 'completed']);
+        return back()->with('success', 'Pesanan selesai!');
     }
 }
