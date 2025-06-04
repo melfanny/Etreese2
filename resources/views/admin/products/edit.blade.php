@@ -2,7 +2,6 @@
 
 @section('content')
     <style>
-        /* Copy semua style dari add new agar sama persis */
         .product-form-container {
             background-color: #f3e5d7;
             padding: 2rem;
@@ -152,26 +151,7 @@
 
                     <div class="label">Stok per Kombinasi</div>
                     <div id="stock-wrapper" style="margin-top: 1rem;">
-                        @php
-                            $colors = old('colors', $product->colors->pluck('name')->toArray());
-                            $sizes = old('sizes', $product->sizes->pluck('name')->toArray());
-                            $stockMap = [];
-                            foreach ($product->stocks as $stock) {
-                                $colorName = $stock->color->name;
-                                $sizeName = $stock->size->name;
-                                $stockMap[$colorName][$sizeName] = $stock->quantity;
-                            }
-                        @endphp
-                        @foreach ($colors as $color)
-                            <div><strong>Warna: {{ $color }}</strong></div>
-                            @foreach ($sizes as $size)
-                                <label>Ukuran {{ $size }}: </label>
-                                <input type="number" name="stocks[{{ $color }}][{{ $size }}]" min="0"
-                                    value="{{ old('stocks.' . $color . '.' . $size, $stockMap[$color][$size] ?? 0) }}" required
-                                    class="input-attr">
-                                <br>
-                            @endforeach
-                        @endforeach
+                        {{-- Input stok akan diisi oleh JavaScript --}}
                     </div>
 
                     <button type="submit" class="submit-btn">Update Produk</button>
@@ -179,6 +159,11 @@
             </div>
         </form>
     </div>
+
+    <!-- Kirim data stok lama ke JS -->
+    <script>
+        const oldStockMap = @json($stockMap ?? []);
+    </script>
 
     <script>
         function addSize() {
@@ -220,7 +205,11 @@
                     input.type = 'number';
                     input.name = `stocks[${color}][${size}]`;
                     input.min = 0;
-                    input.value = 0;
+                    if (oldStockMap[color] && oldStockMap[color][size] !== undefined) {
+                        input.value = oldStockMap[color][size];
+                    } else {
+                        input.value = 0;
+                    }
                     input.required = true;
                     input.className = 'input-attr';
                     label.appendChild(input);

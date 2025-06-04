@@ -20,8 +20,18 @@ class ProductController extends Controller
 
     public function edit($id)
     {
-        $product = Product::findOrFail($id);
-        return view('admin.products.edit', compact('product'));
+        $product = Product::with(['colors', 'sizes', 'stocks'])->findOrFail($id);
+        $stockMap = [];
+        foreach ($product->stocks as $stock) {
+            $color = $stock->color->name;
+            $size = $stock->size->name;
+            $stockMap[$color][$size] = $stock->quantity;
+        }
+
+        return view('admin.products.edit', [
+            'product' => $product,
+            'stockMap' => $stockMap,
+        ]);
     }
 
     public function destroy($id)

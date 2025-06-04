@@ -393,8 +393,8 @@
                                 </div>
                                 <div class="limit-group">
                                     <button type="button" class="limit-btn" onclick="stepLimit('{{ $inputId }}', -1)">&#8722;</button>
-                                    <input type="text" name="stock_limit[{{ $sizeId }}]" id="{{ $inputId }}" class="limit-input"
-                                        value="{{ $stockLimit }}" min="0" data-default="{{ $stockLimit }}" readonly>
+                                    <input type="number" name="stock_limit[{{ $sizeId }}]" id="{{ $inputId }}" class="limit-input"
+                                        value="{{ $stockLimit }}" min="0" data-default="{{ $stockLimit }}">
                                     <button type="button" class="limit-btn" onclick="stepLimit('{{ $inputId }}', 1)">&#43;</button>
                                     <button type="button" class="reset-btn" onclick="resetLimit('{{ $inputId }}')">
                                         <i class="fas fa-sync-alt"></i> Reset
