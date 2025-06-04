@@ -1,0 +1,63 @@
+<?php
+namespace App\Http\Controllers;
+
+use App\Models\Aboutus;
+use Illuminate\Http\Request;
+
+class AboutUsController extends Controller
+{
+    public function edit()
+    {
+        $series = Aboutus::where('type', 'series')->get();
+        $whyEtreese = Aboutus::where('type', 'why_etreese')->get();
+
+        return view('admin.aboutus_admin', compact('series', 'whyEtreese'));
+    }
+
+    public function update(Request $request)
+    {
+        // Validasi dinamis
+        $rules = [];
+        foreach (['series', 'why_etreese'] as $section) {
+            for ($i = 0; $i < 4; $i++) {
+                $rules["{$section}_name_$i"] = 'nullable|string|max:255';
+                $rules["{$section}_image_$i"] = 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048';
+                if ($section === 'why_etreese') {
+                    $rules["{$section}_desc_$i"] = 'nullable|string';
+                }
+            }
+        }
+        $validated = $request->validate($rules);
+
+        foreach (['series', 'why_etreese'] as $section) {
+            for ($i = 0; $i < 4; $i++) {
+                $nameField = "{$section}_name_$i";
+                $imageField = "{$section}_image_$i";
+                $descField = "{$section}_desc_$i";
+
+                if (!$request->filled($nameField) && !$request->hasFile($imageField)) {
+                    continue;
+                }
+
+                $about = Aboutus::where('type', $section)->skip($i)->first();
+                if (!$about) {
+                    $about = new Aboutus(['type' => $section]);
+                }
+
+                $about->name = $request->$nameField ?? $about->name;
+
+                if ($request->hasFile($imageField)) {
+                    $about->image_path = $request->file($imageField)->store('aboutus_images', 'public');
+                }
+
+                if ($section === 'why_etreese') {
+                    $about->description = $request->$descField ?? $about->description;
+                }
+
+                $about->save();
+            }
+        }
+
+        return redirect()->route('admin.aboutus.edit')->with('success', 'About Us content updated.');
+    }
+}

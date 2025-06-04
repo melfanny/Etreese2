@@ -64,7 +64,10 @@ class CartController extends Controller
     // menampilkan informasi produk di cart 
     public function index()
     {
-        $carts = Cart::with('product', 'color', 'size')->where('user_id', Auth::id())->get();
+       $carts = Cart::with('product', 'color', 'size')
+            ->where('user_id', Auth::id())
+            ->orderBy('created_at', 'asc') // atau 'desc' sesuai keinginan
+            ->get();
         return view('cart', compact('carts'));
     }
 
