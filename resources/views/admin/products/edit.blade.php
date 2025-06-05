@@ -135,7 +135,8 @@
                     <div class="label">Warna</div>
                     <div id="colors-wrapper">
                         @foreach(old('colors', $product->colors->pluck('name')->toArray()) as $color)
-                            <input type="text" name="colors[]" class="input-attr" value="{{ $color }}" required>
+                            <input type="text" name="colors[]" class="input-attr" value="{{ $color }}" required readonly
+                                style="background-color:#eee; cursor:not-allowed;">
                         @endforeach
                     </div>
 

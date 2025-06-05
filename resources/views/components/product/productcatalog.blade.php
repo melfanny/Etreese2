@@ -50,9 +50,10 @@
         color: #ffffff;
         flex: 1;
         padding-right: 10px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        display: block;
+        white-space: normal;
+        text-overflow: unset;
+        word-break: break-word;
     }
 
 
