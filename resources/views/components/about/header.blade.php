@@ -123,7 +123,11 @@
     <div class="about-header">
         <section class="section">
             <div class="image-container">
-                <img src="/images/etreese logo.jpg" alt="About Image">
+                @if(isset($aboutUsImages) && $aboutUsImages->header_image)
+                    <img src="{{ asset('storage/' . $aboutUsImages->header_image) }}" alt="About Image">
+                @else
+                    <img src="/images/etreese logo.jpg" alt="About Image">
+                @endif
             </div>
             <div class="content-container">
                 <div class="box">

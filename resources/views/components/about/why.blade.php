@@ -99,7 +99,11 @@
         <div class="about-why-cards">
             <div class="about-why-card">
                 <div class="about-why-icon">
-                    <img src="/images/rafflesia hitam.png" alt="Indonesia Asset">
+                    @if(isset($aboutUsImages) && $aboutUsImages->why_image_1)
+                        <img src="{{ asset('storage/' . $aboutUsImages->why_image_1) }}" alt="Indonesia Asset">
+                    @else
+                        <img src="/images/rafflesia hitam.png" alt="Indonesia Asset">
+                    @endif
                 </div>
                 <h3 class="about-why-heading">Indonesia Asset</h3>
                 <p class="about-why-text">
@@ -109,7 +113,11 @@
             </div>
             <div class="about-why-card">
                 <div class="about-why-icon">
-                    <img src="/images/melati hitam.png" alt="Eco Friendly">
+                    @if(isset($aboutUsImages) && $aboutUsImages->why_image_2)
+                        <img src="{{ asset('storage/' . $aboutUsImages->why_image_2) }}" alt="Eco Friendly">
+                    @else
+                        <img src="/images/melati hitam.png" alt="Eco Friendly">
+                    @endif
                 </div>
                 <h3 class="about-why-heading">Eco Friendly</h3>
                 <p class="about-why-text">
@@ -118,7 +126,11 @@
             </div>
             <div class="about-why-card">
                 <div class="about-why-icon">
-                    <img src="/images/kenanga hitam.png" alt="Customer">
+                    @if(isset($aboutUsImages) && $aboutUsImages->why_image_3)
+                        <img src="{{ asset('storage/' . $aboutUsImages->why_image_3) }}" alt="Customer">
+                    @else
+                        <img src="/images/kenanga hitam.png" alt="Customer">
+                    @endif
                 </div>
                 <h3 class="about-why-heading">Customer</h3>
                 <p class="about-why-text">

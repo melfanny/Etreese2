@@ -49,6 +49,12 @@
         margin-bottom: 5px;
     }
 
+    .text {
+        display: flex;
+        color: black;
+        justify-content: center;
+    }
+
     @media (max-width: 600px) {
         .notif-box {
             flex-direction: column;
@@ -77,7 +83,7 @@
                 <div class="notif-time">{{ \Carbon\Carbon::parse($notif->created_at)->format('h:i A') }}</div>
             </div>
         @empty
-            <div class="text-white text-center">Belum ada notifikasi.</div>
+            <div class="text">Belum ada notifikasi.</div>
         @endforelse
     </div>
 </section>

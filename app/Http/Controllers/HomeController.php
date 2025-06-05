@@ -13,7 +13,11 @@ class HomeController extends Controller
         if (!$home) {
             $home = Home::create([]);
         }
-        return view('admin.home_admin', compact('home'));
+        $aboutUsImages = \App\Models\AboutUsImage::first();
+        if (!$aboutUsImages) {
+            $aboutUsImages = \App\Models\AboutUsImage::create([]);
+        }
+        return view('admin.home_admin', compact('home', 'aboutUsImages'));
     }
 
     public function update(Request $request)

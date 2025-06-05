@@ -60,11 +60,25 @@
 <section class="products-section">
     <div class="search-bar">
         <!-- Menggunakan route product untuk melakukan search supaya gak perlu direct ke route baru (search) untuk pencarian -->
-        <form action="{{ route('products.index') }}" method="GET">
-            <input type="text" name="search" value="{{ request('search') }}">
+        <form id="searchForm" action="{{ route('products.index') }}" method="GET">
+            <input type="text" id="searchInput" name="search" value="{{ request('search') }}">
             <button type="submit"></button>
             <img src="{{ asset('images/searchlogo.png') }}" alt="Search" class="search-logo">
         </form>
+        <script>
+            (function () {
+                const form = document.getElementById('searchForm');
+                const input = document.getElementById('searchInput');
+                let timeout = null;
+
+                input.addEventListener('input', function () {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(function () {
+                        form.submit();
+                    }, 300); // debounce delay 300ms
+                });
+            })();
+        </script>
         <!-- Kondisional jika produk ditemukan maka tampilkan product cartnya. Jika tidak maka menampilkan tulisan produk tidak ditemukan -->
         @if($products->count())
             @foreach($products as $product)

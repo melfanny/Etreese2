@@ -13,7 +13,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ContactController;
-
+use App\Http\Controllers\AboutUsImageController;
 
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
@@ -36,8 +36,11 @@ Route::get('/Products', [UserProductController::class, 'index'])->name('products
 // })->name('cart');
 
 
+use App\Models\AboutUsImage;
+
 Route::get('/AboutUs', function () {
-    return view('aboutus');
+    $aboutUsImages = AboutUsImage::first();
+    return view('aboutus', compact('aboutUsImages'));
 })->name('aboutus');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
@@ -62,6 +65,9 @@ Route::prefix('admin')->group(function () {
     Route::get('products', [AdminController::class, 'products_admin'])->name('admin.products.products_admin');
     Route::get('add_new', [ProductController::class, 'create'])->name('admin.products.create');
 });
+
+Route::get('/admin/home', [HomeController::class, 'edit'])->name('home.edit');
+Route::post('/admin/home/update', [HomeController::class, 'update'])->name('home.update');
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('message', [App\Http\Controllers\MessageController::class, 'index'])->name('admin.message');
@@ -113,7 +119,9 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/admin/home', [HomeController::class, 'edit'])->name('home.edit');
-    Route::post('/admin/home/update', action: [HomeController::class, 'update'])->name('home.update');
+    Route::post('/admin/home/update', [HomeController::class, 'update'])->name('home.update');
+    Route::get('about-us-images/edit', [AboutUsImageController::class, 'edit'])->name('about_us_images.edit');
+    Route::post('about-us-images/update', [AboutUsImageController::class, 'update'])->name('about_us_images.update');
 });
 
 Route::middleware('auth')->group(function () {

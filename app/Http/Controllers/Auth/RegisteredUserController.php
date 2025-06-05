@@ -45,6 +45,10 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
+        if ($user->role === 'admins') {
+            return redirect()->route('admin.orders');
+        }
+
         return redirect(route('addresses.create'));
     }
 }

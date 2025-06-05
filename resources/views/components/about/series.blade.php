@@ -110,28 +110,41 @@
             <div class="left-content">
                 <div class="about-series-box-container">
                     <div class="about-series-box">
-                        <img src="/images/anggrek bulan realistis.png"
-                            alt="Anggrek Bulan">
+                        @if(isset($aboutUsImages) && $aboutUsImages->series_image_1)
+                            <img src="{{ asset('storage/' . $aboutUsImages->series_image_1) }}" alt="Anggrek Bulan">
+                        @else
+                            <img src="/images/anggrek bulan realistis.png" alt="Anggrek Bulan">
+                        @endif
                         <div class="box-footer">
                             <h4>Anggrek Bulan</h4>
                         </div>
                     </div>
                     <div class="about-series-box">
-                        <img src="/images/melati realistis.png" alt="Melati">
+                        @if(isset($aboutUsImages) && $aboutUsImages->series_image_2)
+                            <img src="{{ asset('storage/' . $aboutUsImages->series_image_2) }}" alt="Melati">
+                        @else
+                            <img src="/images/melati realistis.png" alt="Melati">
+                        @endif
                         <div class="box-footer">
                             <h4>Melati</h4>
                         </div>
                     </div>
                     <div class="about-series-box">
-                        <img src="/images/rafflesia realistis.png"
-                            alt="Rafflesia Arnoldi">
+                        @if(isset($aboutUsImages) && $aboutUsImages->series_image_3)
+                            <img src="{{ asset('storage/' . $aboutUsImages->series_image_3) }}" alt="Rafflesia Arnoldi">
+                        @else
+                            <img src="/images/rafflesia realistis.png" alt="Rafflesia Arnoldi">
+                        @endif
                         <div class="box-footer">
                             <h4>Rafflesia Arnoldi</h4>
                         </div>
                     </div>
                     <div class="about-series-box">
-                        <img src="/images/kenanga realistis.png"
-                            alt="Kenanga">
+                        @if(isset($aboutUsImages) && $aboutUsImages->series_image_4)
+                            <img src="{{ asset('storage/' . $aboutUsImages->series_image_4) }}" alt="Kenanga">
+                        @else
+                            <img src="/images/kenanga realistis.png" alt="Kenanga">
+                        @endif
                         <div class="box-footer">
                             <h4>Kenanga</h4>
                         </div>

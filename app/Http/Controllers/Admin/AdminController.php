@@ -25,8 +25,12 @@ class AdminController extends Controller
         }
 
         $home = Home::first();
+        $aboutUsImages = \App\Models\AboutUsImage::first();
+        if (!$aboutUsImages) {
+            $aboutUsImages = \App\Models\AboutUsImage::create([]);
+        }
 
-        return view('admin.home_admin', compact('home'));
+        return view('admin.home_admin', compact('home', 'aboutUsImages'));
     }
 
     public function orders()

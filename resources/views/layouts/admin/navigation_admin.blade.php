@@ -236,7 +236,7 @@
                                 ->where('is_read', false)
                                 ->get();
                         @endphp
-                        <x-dropdown-link :href="route('admin.home')"> {{ __('Edit Home') }}
+                        <x-dropdown-link :href="route('home.edit')"> {{ __('Edit Gambar') }}
                         </x-dropdown-link>
                         <x-dropdown-link :href="url('/admin/message')"> {{ __('Messages') }}
                         </x-dropdown-link>

@@ -54,7 +54,7 @@
 
     <div class="form-container">
         <h2>Edit Home Images</h2>
-        <form action="{{ route('admin.home.update') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('home.update') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="form-group">
@@ -94,6 +94,54 @@
             </div>
 
             <button type="submit">Update Images</button>
+        </form>
+    </div>
+
+    <div class="form-container" style="margin-top: 40px;">
+        <h2>Edit About Us Images</h2>
+        <form action="{{ route('admin.about_us_images.update') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+
+            <div class="form-group">
+                <label for="header_image">About Us Header Image</label>
+                <input type="file" name="header_image" id="header_image" accept="image/*">
+                @if(isset($aboutUsImages) && $aboutUsImages->header_image)
+                    <div class="preview">
+                        <p>Current About Us Header Image:</p>
+                        <img src="{{ asset('storage/' . $aboutUsImages->header_image) }}" alt="About Us Header Image">
+                    </div>
+                @endif
+            </div>
+
+            @for ($i = 1; $i <= 4; $i++)
+                <div class="form-group">
+                    <label for="series_image_{{ $i }}">Series Image {{ $i }}</label>
+                    <input type="file" name="series_image_{{ $i }}" id="series_image_{{ $i }}" accept="image/*">
+                    @php $field = 'series_image_' . $i; @endphp
+                    @if(isset($aboutUsImages) && $aboutUsImages->$field)
+                        <div class="preview">
+                            <p>Current Series Image {{ $i }}:</p>
+                            <img src="{{ asset('storage/' . $aboutUsImages->$field) }}" alt="Series Image {{ $i }}">
+                        </div>
+                    @endif
+                </div>
+            @endfor
+
+            @for ($i = 1; $i <= 3; $i++)
+                <div class="form-group">
+                    <label for="why_image_{{ $i }}">Why Image {{ $i }}</label>
+                    <input type="file" name="why_image_{{ $i }}" id="why_image_{{ $i }}" accept="image/*">
+                    @php $field = 'why_image_' . $i; @endphp
+                    @if(isset($aboutUsImages) && $aboutUsImages->$field)
+                        <div class="preview">
+                            <p>Current Why Image {{ $i }}:</p>
+                            <img src="{{ asset('storage/' . $aboutUsImages->$field) }}" alt="Why Image {{ $i }}">
+                        </div>
+                    @endif
+                </div>
+            @endfor
+
+            <button type="submit">Update About Us Images</button>
         </form>
     </div>
 @endsection

@@ -266,6 +266,12 @@
         font-weight: 600;
     }
 
+    .alert {
+        display: flex;
+        color: #black;
+        justify-content: center;
+    }
+
     @media (max-width: 700px) {
         .overview-header {
             flex-direction: column;
