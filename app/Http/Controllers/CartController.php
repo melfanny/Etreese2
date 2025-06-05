@@ -64,7 +64,7 @@ class CartController extends Controller
     // menampilkan informasi produk di cart 
     public function index()
     {
-       $carts = Cart::with('product', 'color', 'size')
+        $carts = Cart::with('product', 'color', 'size')
             ->where('user_id', Auth::id())
             ->orderBy('created_at', 'asc') // atau 'desc' sesuai keinginan
             ->get();
@@ -129,7 +129,7 @@ class CartController extends Controller
                 $colorName = $cart->color->name ?? 'N/A';
                 $sizeName = $cart->size->name ?? 'N/A';
                 $availableStock = $stock ? $stock->quantity : 0;
-                
+
                 return back()->with('error', "Stok tidak mencukupi untuk produk: {$productName} ({$colorName} - {$sizeName}). Stok tersedia: {$availableStock}");
             }
 
@@ -139,17 +139,34 @@ class CartController extends Controller
         return back();
     }
 
-    public function checkout()
+    public function checkout(Request $request)
     {
-        $carts = Cart::with('product', 'color', 'size')->where('user_id', Auth::id())->get();
+        $cartIds = $request->input('cart_ids');
+
+        if ($cartIds) {
+            // If cart_ids is a comma-separated string, convert to array
+            if (is_string($cartIds)) {
+                $cartIds = explode(',', $cartIds);
+            }
+            $carts = Cart::with('product', 'color', 'size')
+                ->where('user_id', Auth::id())
+                ->whereIn('id', $cartIds)
+                ->get();
+        } else {
+            // If no cart_ids provided, fallback to all carts
+            $carts = Cart::with('product', 'color', 'size')
+                ->where('user_id', Auth::id())
+                ->get();
+        }
+
         $address = Address::where('user_id', Auth::id())->first();
 
         $totalWeight = 0;
-            foreach ($carts as $cart) {
-                $weightPerProduct = $cart->product->weight ?? 1000; // default 1000 gram jika belum ada berat
-                $totalWeight += $weightPerProduct * $cart->quantity;
-            }
+        foreach ($carts as $cart) {
+            $weightPerProduct = $cart->product->weight ?? 1000; // default 1000 gram jika belum ada berat
+            $totalWeight += $weightPerProduct * $cart->quantity;
+        }
 
-                return view('checkout', compact('carts', 'address', 'totalWeight'));
+        return view('checkout', compact('carts', 'address', 'totalWeight'));
     }
 }

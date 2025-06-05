@@ -1,6 +1,6 @@
 <style>
     .checkout-body {
-        background-color: #d2997a;
+        background-color: #EBC4AE;
         width: 100%;
         min-height: 100%;
         padding: 0;

@@ -196,7 +196,10 @@
             </div>
             <div>
                 <span>Total: Rp<span id="totalPrice">0</span></span>
-                <a href="{{ route('checkout') }}" class="checkout-btn">Checkout (<span id="selectedCount"> 0</span>)</a>
+                <form id="checkoutForm" method="GET" action="{{ route('checkout') }}" style="display: inline;">
+                    <input type="hidden" name="cart_ids" id="checkoutCartIds" value="">
+                    <button type="submit" class="checkout-btn">Checkout (<span id="selectedCount"> 0</span>)</button>
+                </form>
             </div>
         </div>
     @endif
