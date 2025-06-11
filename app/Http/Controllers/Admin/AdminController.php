@@ -57,10 +57,18 @@ class AdminController extends Controller
             abort(403, 'Akses ditolak. Halaman ini hanya untuk admin.');
         }
 
-        $period = $request->get('period', 'week'); // Default to week if not specified
+        // Ambil filter dari request
+        $period = $request->get('period', 'week');
+        $start = $request->get('start');
+        $end = $request->get('end');
 
-        // Get all completed orders for the period
-        $orders = Order::where('status', 'completed')
+        $allOrders = Order::with('user')->orderByDesc('created_at')->get();
+
+        $orders = Order::with('user')
+            ->where('status', 'completed')
+            ->when($period === 'day', function ($q) {
+                return $q->whereDate('created_at', Carbon::today());
+            })
             ->when($period === 'week', function ($q) {
                 return $q->whereBetween('created_at', [
                     Carbon::now()->startOfWeek(),
@@ -79,8 +87,13 @@ class AdminController extends Controller
                     Carbon::now()->endOfYear()
                 ]);
             })
+            ->when($period === 'custom' && $start && $end, function ($q) use ($start, $end) {
+                return $q->whereBetween('created_at', [
+                    Carbon::parse($start)->startOfDay(),
+                    Carbon::parse($end)->endOfDay()
+                ]);
+            })
             ->get();
-
         // Get all products
         $products = Product::with(['colors', 'sizes'])->get();
         $detailedSales = [];
@@ -179,10 +192,49 @@ class AdminController extends Controller
                 ];
             }
         }
+        $totalOmzet = $orders->sum('total');
+        $chartData = [];
+        $startDate = $orders->min('created_at') ?? now();
+        $endDate = $orders->max('created_at') ?? now();
+        $period = \Carbon\CarbonPeriod::create($startDate, $endDate);
 
+        foreach ($orders as $order) {
+            if (is_string($order->checkout_data)) {
+                $order->checkout_data = json_decode($order->checkout_data, true);
+            }
+            if (!is_array($order->checkout_data)) {
+                $order->checkout_data = [];
+            }
+        }
+        foreach ($allOrders as $order) {
+            if (is_string($order->checkout_data)) {
+                $order->checkout_data = json_decode($order->checkout_data, true);
+            }
+            if (!is_array($order->checkout_data)) {
+                $order->checkout_data = [];
+            }
+        }
+        foreach ($period as $date) {
+            $dateStr = $date->format('Y-m-d');
+            $chartData[$dateStr] = 0;
+        }
+        foreach ($orders as $order) {
+            $dateStr = $order->created_at->format('Y-m-d');
+            $qty = collect($order->checkout_data)->sum('quantity');
+            if (isset($chartData[$dateStr])) {
+                $chartData[$dateStr] += $qty;
+            }
+        }
+        $chartLabels = array_values(array_keys($chartData));
+        $chartValues = array_values(array_values($chartData));
         return view('admin.sales', [
             'salesData' => $detailedSales,
-            'currentPeriod' => $period
+            'currentPeriod' => $period,
+            'totalOmzet' => $totalOmzet,
+            'chartLabels' => $chartLabels,
+            'chartValues' => $chartValues,
+            'orders' => $orders,
+            'allOrders' => $allOrders,
         ]);
     }
 
