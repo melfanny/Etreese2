@@ -228,7 +228,8 @@
 
         th,
         td {
-            padding: 10px 12px;
+            display: table-cell;
+            padding: 5px;
             border-bottom: 1px solid #e5c7b0;
             text-align: left;
             white-space: nowrap;
@@ -279,9 +280,9 @@
     </style>
     <!-- Modal popup detail transaksi -->
     <div id="orderModal" class="orderModal"
-        style="display:none; position:fixed; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.3); z-index:9999; align-items:center; justify-content:center;">
+        style="display:none; position:fixed; right: 0; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.3); z-index:9999; align-items:center; justify-content:center;">
         <div id="orderModalBox"
-            style="background:#fff; border-radius:10px; padding:24px; min-width:320px; max-width:90vw; position:relative;">
+            style="background:#fff; border-radius:10px; padding:24px ; min-width:600px; max-width:90vw; position:relative;">
             <button onclick="closeOrderModal()"
                 style="position:absolute; right:16px; top:12px; background:none; border:none; font-size:1.5rem; color:#b36b2c;">&times;</button>
             <h4 style="color:#884F22; margin-bottom:12px;">Detail Transaksi</h4>
@@ -293,49 +294,49 @@
             if (!Array.isArray(data)) data = [];
             let total = 0;
             let html = `
-                                                                                 <div style="max-width:350px;margin:0 auto;padding:8px 0;">
-                                                                                     <div style="text-align:center;font-weight:bold;font-size:1.2rem;color:#884F22;margin-bottom:6px;">DETAIL PEMBELIAN</div>
-                                                                                     <div style="font-size:0.98rem;margin-bottom:8px;">
-                                                                                         <b>ID Order:</b> ${orderId}<br>
-                                                                                         <b>Tanggal:</b> ${new Date().toLocaleDateString('id-ID')}
-                                                                                     </div>
-                                                                                     <table style="width:100%;border-collapse:collapse;font-size:0.98rem;">
-                                                                                         <thead>
-                                                                                             <tr style="border-bottom:1px solid #e5c7b0;">
-                                                                                                 <th style="text-align:left;">Produk</th>
-                                                                                                 <th style="text-align:center;">Jumlah</th>
-                                                                                                 <th style="text-align:right;">Harga</th>
-                                                                                                 <th style="text-align:right;">Subtotal</th>
-                                                                                             </tr>
-                                                                                         </thead>
-                                                                                         <tbody>
-                                                                                 `;
+                                                                                                                                                                                                                             <div style="max-width:350px;margin:0 auto;padding:8px 0;">
+                                                                                                                                                                                                                                 <div style="text-align:center;font-weight:bold;font-size:1.2rem;color:#884F22;margin-bottom:6px;">DETAIL PEMBELIAN</div>
+                                                                                                                                                                                                                                 <div style="font-size:0.98rem;margin-bottom:8px;">
+                                                                                                                                                                                                                                     <b>ID Order:</b> ${orderId}<br>
+                                                                                                                                                                                                                                     <b>Tanggal:</b> ${new Date().toLocaleDateString('id-ID')}
+                                                                                                                                                                                                                                 </div>
+                                                                                                                                                                                                                                 <table style="width:100%;border-collapse:collapse;font-size:0.98rem;">
+                                                                                                                                                                                                                                     <thead>
+                                                                                                                                                                                                                                         <tr style="border-bottom:1px solid #e5c7b0;">
+                                                                                                                                                                                                                                             <th style="text-align:left;">Produk</th>
+                                                                                                                                                                                                                                             <th style="text-align:center;">Jumlah</th>
+                                                                                                                                                                                                                                             <th style="text-align:right;">Harga</th>
+                                                                                                                                                                                                                                             <th style="text-align:right;">Subtotal</th>
+                                                                                                                                                                                                                                         </tr>
+                                                                                                                                                                                                                                     </thead>
+                                                                                                                                                                                                                                     <tbody>
+                                                                                                                                                                                                                             `;
             data.forEach(item => {
                 let subtotal = (item.price ?? 0) * (item.quantity ?? 0);
                 total += subtotal;
                 html += `
-                                                                                     <tr>
-                                                                                         <td>
-                                                                                             ${item.product_name ?? '-'}
-                                                                                             ${item.size ? `<br><span style="font-size:0.9em;color:#b36b2c;">Ukuran: ${item.size}</span>` : ''}
-                                                                                             ${item.color ? `<br><span style="font-size:0.9em;color:#b36b2c;">Warna: ${item.color}</span>` : ''}
-                                                                                             ${item.catatan ? `<br><span style="font-size:0.9em;color:#884F22;">Catatan: ${item.catatan}</span>` : ''}
-                                                                                         </td>
-                                                                                         <td style="text-align:center;">${item.quantity ?? '-'}</td>
-                                                                                         <td style="text-align:right;">Rp${Number(item.price ?? 0).toLocaleString('id-ID')}</td>
-                                                                                         <td style="text-align:right;">Rp${subtotal.toLocaleString('id-ID')}</td>
-                                                                                     </tr>
-                                                                                 `;
+                                                                                                                                                                                                                                 <tr>
+                                                                                                                                                                                                                                     <td>
+                                                                                                                                                                                                                                         ${item.product_name ?? '-'}
+                                                                                                                                                                                                                                         ${item.size ? `<br><span style="font-size:0.9em;color:#b36b2c;">Ukuran: ${item.size}</span>` : ''}
+                                                                                                                                                                                                                                         ${item.color ? `<br><span style="font-size:0.9em;color:#b36b2c;">Warna: ${item.color}</span>` : ''}
+                                                                                                                                                                                                                                         ${item.catatan ? `<br><span style="font-size:0.9em;color:#884F22;">Catatan: ${item.catatan}</span>` : ''}
+                                                                                                                                                                                                                                     </td>
+                                                                                                                                                                                                                                     <td style="text-align:center;">${item.quantity ?? '-'}</td>
+                                                                                                                                                                                                                                     <td style="text-align:right;">Rp${Number(item.price ?? 0).toLocaleString('id-ID')}</td>
+                                                                                                                                                                                                                                     <td style="text-align:right;">Rp${subtotal.toLocaleString('id-ID')}</td>
+                                                                                                                                                                                                                                 </tr>
+                                                                                                                                                                                                                             `;
             });
             html += `
-                                                                                            </tbody>
-                                                                                        </table>
-                                                                                        <div style="border-top:1px dashed #b36b2c;margin:12px 0 4px 0;"></div>
-                                                                                        <div style="text-align:right;font-weight:bold;font-size:1.08rem;">
-                                                                                            Total: Rp${total.toLocaleString('id-ID')}
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    `;
+                                                                                                                                                                                                                                        </tbody>
+                                                                                                                                                                                                                                    </table>
+                                                                                                                                                                                                                                    <div style="border-top:1px dashed #b36b2c;margin:12px 0 4px 0;"></div>
+                                                                                                                                                                                                                                    <div style="text-align:right;font-weight:bold;font-size:1.08rem;">
+                                                                                                                                                                                                                                        Total: Rp${total.toLocaleString('id-ID')}
+                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                `;
             document.getElementById('orderDetailContent').innerHTML = html;
             document.getElementById('orderModal').style.display = 'flex';
         }
