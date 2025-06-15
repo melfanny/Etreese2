@@ -9,7 +9,8 @@ use App\Models\Order;
 use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-
+use App\Exports\UsersExport;
+use Maatwebsite\Excel\Facades\Excel;
 class AdminController extends Controller
 {
     // Fungsi untuk mengecek apakah user admin
@@ -66,27 +67,6 @@ class AdminController extends Controller
 
         $orders = Order::with('user')
             ->where('status', 'completed')
-            ->when($period === 'day', function ($q) {
-                return $q->whereDate('created_at', Carbon::today());
-            })
-            ->when($period === 'week', function ($q) {
-                return $q->whereBetween('created_at', [
-                    Carbon::now()->startOfWeek(),
-                    Carbon::now()->endOfWeek()
-                ]);
-            })
-            ->when($period === 'month', function ($q) {
-                return $q->whereBetween('created_at', [
-                    Carbon::now()->startOfMonth(),
-                    Carbon::now()->endOfMonth()
-                ]);
-            })
-            ->when($period === 'year', function ($q) {
-                return $q->whereBetween('created_at', [
-                    Carbon::now()->startOfYear(),
-                    Carbon::now()->endOfYear()
-                ]);
-            })
             ->when($period === 'custom' && $start && $end, function ($q) use ($start, $end) {
                 return $q->whereBetween('created_at', [
                     Carbon::parse($start)->startOfDay(),
@@ -214,19 +194,14 @@ class AdminController extends Controller
                 $order->checkout_data = [];
             }
         }
-        foreach ($period as $date) {
-            $dateStr = $date->format('Y-m-d');
-            $chartData[$dateStr] = 0;
+        $chartLabels = [];
+        $chartValues = [];
+
+        foreach ($detailedSales as $product) {
+            $chartLabels[] = $product['name'];
+            $chartValues[] = $product['total_sales'];
         }
-        foreach ($orders as $order) {
-            $dateStr = $order->created_at->format('Y-m-d');
-            $qty = collect($order->checkout_data)->sum('quantity');
-            if (isset($chartData[$dateStr])) {
-                $chartData[$dateStr] += $qty;
-            }
-        }
-        $chartLabels = array_values(array_keys($chartData));
-        $chartValues = array_values(array_values($chartData));
+
         return view('admin.sales', [
             'salesData' => $detailedSales,
             'currentPeriod' => $period,
@@ -263,4 +238,9 @@ class AdminController extends Controller
 
         return view('admin.home');
     }
+    public function exportUsers()
+    {
+        return Excel::download(new UsersExport, 'users.xlsx');
+    }
+
 }

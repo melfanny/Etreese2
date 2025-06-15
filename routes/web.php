@@ -14,6 +14,10 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AboutUsImageController;
+use App\Exports\OrdersTableExport;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Models\Order;
+use App\Exports\OrdersExport;
 
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
@@ -145,6 +149,8 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/orders/{order}/snap-token', [OrderController::class, 'getSnapToken'])->name('order.getSnapToken');
 
-
+Route::get('/admin/transactions/export', function () {
+    return Excel::download(new OrdersExport, 'transaksi.xlsx');
+});
 
 require __DIR__ . '/auth.php';
