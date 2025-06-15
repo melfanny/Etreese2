@@ -230,7 +230,6 @@
         td {
             display: table-cell;
             padding: 5px;
-            padding: 10px 12px;
             border-bottom: 1px solid #e5c7b0;
             text-align: left;
             white-space: nowrap;
@@ -281,9 +280,9 @@
     </style>
     <!-- Modal popup detail transaksi -->
     <div id="orderModal" class="orderModal"
-        style="display:none; position:fixed; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.3); z-index:9999; align-items:center; justify-content:center;">
+        style="display:none; position:fixed; right: 0; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.3); z-index:9999; align-items:center; justify-content:center;">
         <div id="orderModalBox"
-            style="background:#fff; border-radius:10px; padding:24px; min-width:320px; max-width:90vw; position:relative;">
+            style="background:#fff; border-radius:10px; padding:24px ; min-width:600px; max-width:90vw; position:relative;">
             <button onclick="closeOrderModal()"
                 style="position:absolute; right:16px; top:12px; background:none; border:none; font-size:1.5rem; color:#b36b2c;">&times;</button>
             <h4 style="color:#884F22; margin-bottom:12px;">Detail Transaksi</h4>
